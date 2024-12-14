@@ -28,12 +28,13 @@ public class Group {
     public void addPersonGroup(Person person) {
         this.groupMembers.add(person);
     }
-    public ArrayList<Person> getGroupMembers() {
-        return groupMembers;
-    }
     public void removePersonGroup(Person person) {
         this.groupMembers.remove(person);
     }
-    
-
+    public ArrayList<Person> getGroupMembers() {
+        return groupMembers;
+    }
+    public int getSize() {
+        return groupMembers.size();
+    }
 }
