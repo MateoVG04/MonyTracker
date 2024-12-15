@@ -2,28 +2,49 @@ package Model;
 
 import Model.Strategy.PayBehaviour;
 
+import java.util.Map;
+
 public class Ticket {
-    private float prijs;
-    private String wieBetaald;
-    private String wieOntvangt;
+    private float totalAmount;
+    private Person payer;
+    private Map<Person, Float> paymentsOwed;
+    private Group group;
     private PayBehaviour payBehaviour;
     private String tag;
-    public Ticket(float prijs, String wieBetaald, String wieOntvangt, PayBehaviour payBehaviour) {
-        this.prijs = prijs;
-        this.wieBetaald = wieBetaald;
-        this.wieOntvangt = wieOntvangt;
+    private String description;
+
+    public Ticket(float totalAmount, Person payer, Group group, PayBehaviour payBehaviour, String tag, String description) {
+        this.totalAmount = totalAmount;
+        this.payer = payer;
+        this.group = group;
         this.payBehaviour = payBehaviour;
+        this.tag = tag;
+        this.description = description;
+        // Wanneer ticket wordt gecreëerd gaan we direct berekenen wie wat moet betalen.
+        executePayment();
     }
-    public float getPrijs() {
-        return prijs;
+    public float getTotalAmount() {
+        return totalAmount;
     }
-    public String getWieBetaald() {
-        return wieBetaald;
+    public Person getPayer() {
+        return payer;
     }
-    public String getWieOntvangt() {
-        return wieOntvangt;
+    public Map<Person, Float> getPaymentsOwed() {
+        return paymentsOwed;
+    }
+    public Group getGroup() {
+        return group;
     }
     public PayBehaviour getPayBehaviour() {
         return payBehaviour;
+    }
+    public String getTag() {
+        return tag;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void executePayment() {
+        paymentsOwed = payBehaviour.pay();
     }
 }
