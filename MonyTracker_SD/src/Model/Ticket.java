@@ -26,7 +26,7 @@ public class Ticket {
         this.payBehaviour = payBehaviour;
         this.tag = tag;
         this.description = description;
-        // Wanneer ticket wordt gecreëerd gaan we direct berekenen wie wat moet betalen.
+        // Wanneer ticket wordt gecreëerd gaan we direct berekenen wie wat moet betalen voor dit ticket.
         executePayment();
         ticketID = generateID();
     }
