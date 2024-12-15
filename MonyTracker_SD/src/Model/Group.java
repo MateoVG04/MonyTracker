@@ -11,14 +11,21 @@ import java.util.Map;
 
 public class Group {
     private String groupName;
-    private int groupID;
     private ArrayList<Person> groupMembers;
     private ArrayList<Ticket> tickets;
+    private final int groupID;
+    private static int IDCounter = 0;
+    // Each time person gets created, IDCounter will be incremented
+    // And make it synchronized, so it's thread safe
+    private static synchronized int generateID() {
+        return IDCounter++;
+    }
+
     public Group(String groupName, String groupDescription, int groupID) {
         this.groupName = groupName;
-        this.groupID = groupID;
         this.groupMembers = new ArrayList<>();
         this.tickets = new ArrayList<>();
+        this.groupID = generateID();
     }
     public String getGroupName() {
         return groupName;
@@ -49,7 +56,6 @@ public class Group {
     }
     public Map<String,Map<String,Float>> calculateTransactions() {
         // wordt aangeroepen als de reis gedaan is en je op calculate transactions of group klikt
-
         // Er wordt een list gemaakt met in deze list dictionary (key1, value1) met de key1 de username of
         // userid en als value1 nog een dictionary (key2, value2) met als key2 de username of userid aan wie
         // de eerste user moet betalen en als value2 het totaal bedrag dat die user aan de 2e user (key2)

@@ -12,7 +12,13 @@ public class Ticket {
     private PayBehaviour payBehaviour;
     private String tag;
     private String description;
-
+    private final int ticketID;
+    private static int IDCounter = 0;
+    // Each time person gets created, IDCounter will be incremented
+    // And make it synchronized, so it's thread safe
+    private static synchronized int generateID() {
+        return IDCounter++;
+    }
     public Ticket(float totalAmount, Person payer, Group group, PayBehaviour payBehaviour, String tag, String description) {
         this.totalAmount = totalAmount;
         this.payer = payer;
@@ -22,6 +28,7 @@ public class Ticket {
         this.description = description;
         // Wanneer ticket wordt gecreëerd gaan we direct berekenen wie wat moet betalen.
         executePayment();
+        ticketID = generateID();
     }
     public float getTotalAmount() {
         return totalAmount;
