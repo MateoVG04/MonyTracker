@@ -27,7 +27,7 @@ public class Ticket {
         this.tag = tag;
         this.description = description;
         // Wanneer ticket wordt gecreëerd gaan we direct berekenen wie wat moet betalen voor dit ticket.
-        executePayment();
+        paymentsOwed = payBehaviour.pay();
         ticketID = generateID();
     }
     public float getTotalAmount() {
@@ -50,8 +50,5 @@ public class Ticket {
     }
     public String getDescription() {
         return description;
-    }
-    public void executePayment() {
-        paymentsOwed = payBehaviour.pay();
     }
 }
