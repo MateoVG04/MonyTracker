@@ -78,10 +78,10 @@ public class Group {
                         if (payBehaviour == SplitEqually){
                             bedragTeBetalen = ticket.getPrijs()/this.groupMembers.size();
                         } else if (payBehaviour == SplitByPercentage) {
-                            // nog vinden welk percentage van wie is??
+                            // nog vinden welk percentage van wie is?? -- wordt gedaan als ticket wordt gecreëerd
                             bedragTeBetalen = 1;
                         } else{
-                            // moet duidelijk zijn van welk unequal deel van deze person is om te betalen
+                            // moet duidelijk zijn van welk unequal deel van deze person is om te betalen -- also bij ticket gedaan
                             bedragTeBetalen = 2;
                         }
                         //
