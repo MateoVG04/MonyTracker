@@ -51,4 +51,7 @@ public class Ticket {
     public String getDescription() {
         return description;
     }
+    public int getTicketID() {
+        return ticketID;
+    }
 }
