@@ -8,7 +8,7 @@ public class Ticket {
     private float totalAmount;
     private Person payer;
     private Map<Person, Float> paymentsOwed;
-    private Group group; // Maybe not group but list<Person> because not always the whole group.
+    private Group group;
     private PayBehaviour payBehaviour;
     private String tag;
     private String description;
