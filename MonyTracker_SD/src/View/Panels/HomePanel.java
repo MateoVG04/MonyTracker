@@ -10,6 +10,84 @@ public class HomePanel extends JPanel {
 
     public HomePanel(ViewFrame viewFrame) {
         this.viewFrame = viewFrame;
-        this.setLayout(new BorderLayout());
+        // We use this BoxLayout, so all the SubPanels will come under each other
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+        // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
+//setBackground(Color.BLUE);
+        // Title and SubTitle panel, so they always stay on screen
+        JPanel titlesPanel = getTitlesPanel();
+        // add titlesPanel to top of the Home Page
+        add(titlesPanel);
+        // Scroll panel with all the groups
+        JScrollPane scrollGroupsPanel = getGroupsPanel();
+        // Add the scrollPanel in the middle of the screen
+        add(scrollGroupsPanel);
+        // Add the add group button on bottom of the screen
+        JPanel buttonPanel = getButtonPanel();
+        add(buttonPanel);
+    }
+
+    private static JPanel getTitlesPanel() {
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//titlePanel.setBackground(Color.BLUE);
+        // Title on top of the screen aligned in the center and BIG
+        JLabel titleLabel = new JLabel("Money Tracker", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        https://fonts.google.com/specimen/Montserrat
+        titlePanel.add(titleLabel);
+        // Create SubTitle under Title
+        JLabel subTitleLabel = new JLabel("Groups");
+        subTitleLabel.setFont(new Font("Montserrat", Font.BOLD, 18));
+        subTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titlePanel.add(subTitleLabel);
+        return titlePanel;
+    }
+
+    private JScrollPane getGroupsPanel() {
+        // SubPanel to see all groups
+        JPanel groupsPanel = new JPanel();
+        // Align the groups vertically and in the center
+        groupsPanel.setLayout(new BoxLayout(groupsPanel, BoxLayout.Y_AXIS));
+        groupsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Very Light Blue
+//groupPanel.setBackground(new Color(51, 204, 255));
+        // Add the groups as buttons to the panel with their name
+        for (int i = 0; i<100; i++) {
+            JButton button = new JButton(String.valueOf(i));
+            button.setPreferredSize(new Dimension(180, 40));
+            button.setMaximumSize(button.getPreferredSize());
+            // Small offset because it just couldn't align in the center
+            button.setAlignmentX(Component.CENTER_ALIGNMENT + 0.025f);
+            // Light Blue
+//button.setBackground(Color.WHITE);
+            // when button is clicked we go to the right group page
+            final int finalI = i;
+            button.addActionListener(e -> this.viewFrame.showGroupPage(finalI));
+            groupsPanel.add(button);
+            groupsPanel.add(Box.createVerticalStrut(20));
+        }
+        // Make it a scrollPane so you can scroll endlessly
+        JScrollPane scrollGroupsPanel = new JScrollPane(groupsPanel);
+        scrollGroupsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return scrollGroupsPanel;
+    }
+
+    private JPanel getButtonPanel() {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton addGroupButton = new JButton("Add Group");
+        addGroupButton.setPreferredSize(new Dimension(160, 80));
+        addGroupButton.setMaximumSize(addGroupButton.getPreferredSize());
+        addGroupButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+//addGroupButton.setBackground(Color.GREEN);
+        // when button is clicked we go to an add group dialogue
+        addGroupButton.addActionListener(e -> this.viewFrame.addGroup());
+        buttonPanel.add(addGroupButton);
+        return buttonPanel;
     }
 }
