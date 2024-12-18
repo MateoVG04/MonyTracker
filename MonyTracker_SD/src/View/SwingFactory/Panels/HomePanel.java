@@ -1,14 +1,14 @@
-package View.Panels;
+package View.SwingFactory.Panels;
 
-import View.ViewFrame;
+import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class HomePanel extends JPanel {
-    private ViewFrame viewFrame;
+    private SwingViewFrame viewFrame;
 
-    public HomePanel(ViewFrame viewFrame) {
+    public HomePanel(SwingViewFrame viewFrame) {
         this.viewFrame = viewFrame;
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

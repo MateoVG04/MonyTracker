@@ -1,22 +1,20 @@
-package View.Panels;
+package View.SwingFactory.Panels;
 
 import Model.Group;
-import Model.Ticket;
-import View.ViewFrame;
+import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GroupPanel extends JPanel {
-    private ViewFrame viewFrame;
+    private SwingViewFrame viewFrame;
     private float moneyTotal = 100;
     private float personInDebt;
     private float personYouOwe;
     private Group group;
     private int groupID;
 
-    public GroupPanel(ViewFrame viewFrame, int groupID) {
+    public GroupPanel(SwingViewFrame viewFrame, int groupID) {
         this.viewFrame = viewFrame;
         this.groupID = groupID;
 //this.group = GroupDB.get(groupID);

@@ -1,24 +1,22 @@
-package View.Panels;
+package View.SwingFactory.Panels;
 
-import Model.Group;
 import Model.Person;
 import Model.Ticket;
-import View.ViewFrame;
+import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class TicketPanel extends JPanel {
-    private ViewFrame viewFrame;
+    private SwingViewFrame viewFrame;
     private Person payer;
     private Map<Person, Float> paymentsOwed;
     private Ticket ticket;
     private int ticketID;
     private int groupID;
 
-    public TicketPanel(ViewFrame viewFrame, int ticketID, int groupID) {
+    public TicketPanel(SwingViewFrame viewFrame, int ticketID, int groupID) {
         this.viewFrame = viewFrame;
         this.ticketID = ticketID;
         // we keep groupID, so we know which page to go back to
@@ -113,7 +111,6 @@ public class TicketPanel extends JPanel {
         backButton.setPreferredSize(new Dimension(160, 80));
         backButton.setMaximumSize(backButton.getPreferredSize());
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-//addGroupButton.setBackground(Color.GREEN);
         // when button is clicked we go back to GroupPanel
         backButton.addActionListener(e -> this.viewFrame.showGroupPage(groupID));
         buttonPanel.add(backButton);
