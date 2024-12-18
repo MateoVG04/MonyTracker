@@ -9,9 +9,9 @@ public class Ticket {
     private Person payer;
     private Map<Person, Float> paymentsOwed;
     private Group group;
-    private PayBehaviour payBehaviour;
-    private String tag;
-    private String description;
+    private final PayBehaviour payBehaviour;
+    private final String tag;
+    private final String description;
     private final int ticketID;
     private static int IDCounter = 0;
     // Each time person gets created, IDCounter will be incremented

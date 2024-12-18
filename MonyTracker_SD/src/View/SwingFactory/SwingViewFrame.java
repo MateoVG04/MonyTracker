@@ -10,8 +10,8 @@ public class SwingViewFrame extends JFrame {
     private final JPanel cardPanel;
     private final AbstractViewFactory<JPanel> viewFactory;
 
-    public SwingViewFrame(AbstractViewFactory<JPanel> viewFactory) {
-        this.viewFactory = viewFactory;
+    public SwingViewFrame() {
+        this.viewFactory = new SwingViewFactory(this);
         setTitle("Money Tracker");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,10 +53,14 @@ public class SwingViewFrame extends JFrame {
     }
 
     public void addGroup() {
-        // Go to a new addGroup dialogue
+
     }
 
     public void addTicket() {
         // Go to a new addTicket dialogue
+    }
+
+    public void update() {
+        // update the whole view
     }
 }

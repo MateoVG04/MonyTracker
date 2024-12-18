@@ -3,8 +3,8 @@ package Model;
 import Model.Strategy.PayBehaviour;
 
 public class Person {
-    private String name;
-    private String email;
+    private final String name;
+    private final String email;
     private final int personID;
     private static int IDCounter = 0;
     // Each time person gets created, IDCounter will be incremented
@@ -23,10 +23,7 @@ public class Person {
     public String getEmail() {
         return email;
     }
-    // Moet niet hierstaan denk ik, beter in de group klasse. Want een person kan ook een ticket creeëren dat hij niet
-    // zelf heeft betaald, en je kan vanuit hier niet de andere person zien die heeft gepayed.
-    public void createTicket(float totalAmount, Person payer, Group group, PayBehaviour payBehaviour, String tag, String description) {
-        Ticket ticket = new Ticket(totalAmount, payer, group, payBehaviour, tag, description);
-        group.addTicket(ticket);
+    public int getPersonID() {
+        return personID;
     }
 }

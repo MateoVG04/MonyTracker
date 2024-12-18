@@ -1,10 +1,7 @@
 package Model;
 
 import Model.Strategy.PayBehaviour;
-import Model.Strategy.SplitByPercentage;
-import Model.Strategy.SplitEqually;
 
-import java.beans.BeanDescriptor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +20,7 @@ public class Group {
     // Map<Person1,Map<Person2,Float>> person 1 is iemand die een Float moet betalen aan Person2
     private Map<Person,Map<Person,Float>> transactions = new HashMap<>();
 
-    public Group(String groupName, String groupDescription) {
+    public Group(String groupName) {
         this.groupName = groupName;
         this.groupMembers = new ArrayList<>();
         this.tickets = new ArrayList<>();
@@ -47,10 +44,10 @@ public class Group {
     public int getGroupID() {
         return groupID;
     }
-    public void addPersonGroup(Person person) {
+    public void addPersonToGroup(Person person) {
         this.groupMembers.add(person);
     }
-    public void removePersonGroup(Person person) {
+    public void removePersonFromGroup(Person person) {
         this.groupMembers.remove(person);
     }
     public ArrayList<Person> getGroupMembers() {
@@ -61,6 +58,13 @@ public class Group {
     }
     public void addTicket(Ticket ticket) {
         this.tickets.add(ticket);
+    }
+    public void createTicket(float totalAmount, Person payer, Group group, PayBehaviour payBehaviour, String tag, String description) {
+        Ticket ticket = new Ticket(totalAmount, payer, group, payBehaviour, tag, description);
+        addTicket(ticket);
+    }
+    public void removeTicket(Ticket ticket) {
+        this.tickets.remove(ticket);
     }
     public Map<Person,Map<Person,Float>> calculateTransactions() {
         // wordt aangeroepen als de reis gedaan is en je op calculate transactions of group klikt

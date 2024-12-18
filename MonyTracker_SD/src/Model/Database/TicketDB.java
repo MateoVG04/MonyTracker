@@ -9,7 +9,7 @@ public class TicketDB {
     private final HashMap<Integer, TicketEntry> db;
     private volatile static TicketDB uniqueInstance;
 
-    private TicketDB() {
+    public TicketDB() {
         this.db = new HashMap<>();
     }
 
@@ -24,7 +24,8 @@ public class TicketDB {
         return uniqueInstance;
     }
 
-    public void addTicketEntry(int ticketID, TicketEntry ticketEntry) {
+    public void addTicketEntry(TicketEntry ticketEntry) {
+        int ticketID = ticketEntry.getTicket().getTicketID();
         if (!db.containsKey(ticketID)) {
             db.put(ticketID, ticketEntry);
         } else {
@@ -34,5 +35,14 @@ public class TicketDB {
 
     public TicketEntry getTicketEntry(int ticketID) {
         return this.db.getOrDefault(ticketID, new TicketEntryNull());
+    }
+
+    public void removeTicketEntry(int ticketID) {
+        if (db.containsKey(ticketID)) {
+            db.remove(ticketID);
+        }
+        else {
+            throw new IllegalArgumentException("Person with ID " + ticketID + " does not exist.");
+        }
     }
 }
