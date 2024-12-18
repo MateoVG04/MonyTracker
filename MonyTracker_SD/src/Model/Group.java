@@ -20,12 +20,23 @@ public class Group {
     private static synchronized int generateID() {
         return IDCounter++;
     }
+    // Map<Person1,Map<Person2,Float>> person 1 is iemand die een Float moet betalen aan Person2
+    private Map<Person,Map<Person,Float>> transactions = new HashMap<>();
 
-    public Group(String groupName, String groupDescription, int groupID) {
+    public Group(String groupName, String groupDescription) {
         this.groupName = groupName;
         this.groupMembers = new ArrayList<>();
         this.tickets = new ArrayList<>();
         this.groupID = generateID();
+        for (Person person1 : groupMembers) {
+            Map<Person,Float> owedList = new HashMap<>();
+            for (Person person2 : groupMembers) {
+                if (person1 != person2) {
+                    owedList.put(person2,0.0f);
+                }
+            }
+            transactions.put(person1,owedList);
+        }
     }
     public String getGroupName() {
         return groupName;
@@ -35,9 +46,6 @@ public class Group {
     }
     public int getGroupID() {
         return groupID;
-    }
-    public void setGroupID(int groupID) {
-        this.groupID = groupID;
     }
     public void addPersonGroup(Person person) {
         this.groupMembers.add(person);
@@ -54,47 +62,20 @@ public class Group {
     public void addTicket(Ticket ticket) {
         this.tickets.add(ticket);
     }
-    public Map<String,Map<String,Float>> calculateTransactions() {
+    public Map<Person,Map<Person,Float>> calculateTransactions() {
         // wordt aangeroepen als de reis gedaan is en je op calculate transactions of group klikt
         // Er wordt een list gemaakt met in deze list dictionary (key1, value1) met de key1 de username of
         // userid en als value1 nog een dictionary (key2, value2) met als key2 de username of userid aan wie
         // de eerste user moet betalen en als value2 het totaal bedrag dat die user aan de 2e user (key2)
         // moet betalen
         // Map<wieBetaald,Map<wieOntvangt,bedragTeOntvangen>>
-        Map<String,Map<String,Float>> transactions = new HashMap<>();
-        for (Person person : groupMembers) {
-            Map<String,ArrayList<Map<String,Float>>> transactionUser = new HashMap<>();
-            if (transactions.get(person.getName()) == null) {
-                transactions.put(person.getName(), new HashMap<>());
+        for (Ticket ticket : tickets) {
+            Map<Person,Float> innerMap = transactions.get(ticket.getPayer());
+            for (Map.Entry<Person,Float> needsToPay : innerMap.entrySet()) {
+                Map<Person,Float> payToPersonMap = new HashMap<>();
+                payToPersonMap.put(ticket.getPayer(),ticket.getPaymentsOwed().get(needsToPay.getKey())+transactions.get(needsToPay.getKey()).get(ticket.getPayer()));
+                transactions.put(needsToPay.getKey(),payToPersonMap);
             }
-            for (Ticket ticket : tickets) {
-                if (ticket.getWieBetaald() == person.getName()){
-                    float bedragTeBetalen = 0;
-                    if (transactions.get(person.getName()).get(ticket.getWieOntvangt()) == null) {
-                        // Hier moeten we nog zien wat de ticket.getPayBehaviour returnt... En op basis van deze
-                        // return kan je dan de prijs die persoon1 aan persoon2 moet betalen
-                        //
-                        PayBehaviour payBehaviour = ticket.getPayBehaviour();
-                        if (payBehaviour == SplitEqually){
-                            bedragTeBetalen = ticket.getPrijs()/this.groupMembers.size();
-                        } else if (payBehaviour == SplitByPercentage) {
-                            // nog vinden welk percentage van wie is?? -- wordt gedaan als ticket wordt gecreëerd
-                            bedragTeBetalen = 1;
-                        } else{
-                            // moet duidelijk zijn van welk unequal deel van deze person is om te betalen -- also bij ticket gedaan
-                            bedragTeBetalen = 2;
-                        }
-                        //
-                        //
-                        // OPGELET HIER BOVEN MOET NOG EEN STUKJE CODE KOMEN... ANDERES WERKT HET NIET
-                        transactions.get(person.getName()).put(ticket.getWieOntvangt(), bedragTeBetalen);
-                    }else {
-                        bedragTeBetalen += transactions.get(person.getName()).get(ticket.getWieOntvangt());
-                        transactions.get(person.getName()).put(ticket.getWieOntvangt(), bedragTeBetalen);
-                    }
-                }
-            }
-
         }
         return transactions;
     }
