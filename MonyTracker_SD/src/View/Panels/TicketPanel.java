@@ -28,7 +28,7 @@ public class TicketPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
-//setBackground(Color.BLUE);
+        setBackground(Color.BLUE);
         // Title panel
         JPanel titlePanel = getTitlePanel();
         // add titlePanel to top of the Home Page
@@ -49,9 +49,11 @@ public class TicketPanel extends JPanel {
 
     private JPanel getTitlePanel() {
         JPanel titlePanel = getNewVerticallyAndCenteredPanel();
+        titlePanel.setBackground(Color.BLUE);
         // Title on top of the screen aligned in the center and BIG
         JLabel titleLabel = new JLabel("Ticket " + ticketID, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
+        titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         https://fonts.google.com/specimen/Montserrat
         titlePanel.add(titleLabel);
@@ -60,8 +62,11 @@ public class TicketPanel extends JPanel {
 
     private JPanel getSubTitlePanel() {
         JPanel subTitlePanel = getNewVerticallyAndCenteredPanel();
+        subTitlePanel.setBackground(Color.BLUE);
         JLabel tagLabel = new JLabel("Tag: ", SwingConstants.CENTER);
+        tagLabel.setForeground(Color.WHITE);
         JLabel descriptionLabel = new JLabel("Description: ", SwingConstants.CENTER);
+        descriptionLabel.setForeground(Color.WHITE);
 //JLabel tagLabel = new JLabel("Ticket kind: " + ticket.getTag(), SwingConstants.CENTER);
 //JLabel descriptionLabel = new JLabel("Description: " + ticket.getDescription(), SwingConstants.CENTER);
         Font font = new Font("Montserrat", Font.BOLD, 18);
@@ -76,6 +81,7 @@ public class TicketPanel extends JPanel {
 
     private JScrollPane getExpensesPanel() {
         JPanel expensesPanel = getNewVerticallyAndCenteredPanel();
+        expensesPanel.setBackground(new Color(51, 204, 255));
         // Little whitespace before all the expenses
         expensesPanel.add(Box.createVerticalStrut(20));
         // Add the tickets as buttons to the panel with their name

@@ -24,7 +24,7 @@ public class GroupPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
-//setBackground(Color.BLUE);
+        setBackground(Color.BLUE);
         // Title panel
         JPanel titlePanel = getTitlePanel();
         // add titlePanel to top of the Home Page
@@ -45,10 +45,12 @@ public class GroupPanel extends JPanel {
 
     private JPanel getTitlePanel() {
         JPanel titlePanel = getNewVerticallyAndCenteredPanel();
+        titlePanel.setBackground(Color.BLUE);
         // Title on top of the screen aligned in the center and BIG
 //JLabel titleLabel = new JLabel("Group" + this.group.getGroupName(), SwingConstants.CENTER);
         JLabel titleLabel = new JLabel("Group " + groupID, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
+        titleLabel.setForeground(Color.white);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         https://fonts.google.com/specimen/Montserrat
         titlePanel.add(titleLabel);
@@ -57,6 +59,7 @@ public class GroupPanel extends JPanel {
 
     private JPanel getMoneyTotalPanel() {
         JPanel moneyTotalPanel = getNewVerticallyAndCenteredPanel();
+        moneyTotalPanel.setBackground(Color.BLUE);
         JLabel moneyTotalLabel;
         if (moneyTotal >= 0) {
             moneyTotalLabel = new JLabel("You are owed €" + moneyTotal + " from " + personInDebt, SwingConstants.CENTER);
@@ -65,15 +68,17 @@ public class GroupPanel extends JPanel {
             moneyTotalLabel = new JLabel("You owe " + personYouOwe + " €" + moneyTotal, SwingConstants.CENTER);
         }
         moneyTotalLabel.setFont(new Font("Montserrat", Font.BOLD, 18));
+        moneyTotalLabel.setForeground(Color.white);
         moneyTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         moneyTotalPanel.add(moneyTotalLabel);
         return moneyTotalPanel;
     }
 
     private JScrollPane getTicketsPanel() {
-        JPanel groupPanel = getNewVerticallyAndCenteredPanel();
+        JPanel ticketsPanel = getNewVerticallyAndCenteredPanel();
+        ticketsPanel.setBackground(new Color(51, 204, 255));
         // Little whitespace before all the tickets
-        groupPanel.add(Box.createVerticalStrut(20));
+        ticketsPanel.add(Box.createVerticalStrut(20));
         // Add the tickets as buttons to the panel with their name
 //ArrayList<Ticket> tickets = this.group.getTickets();
         for (int i = 0; i<100; i++) {
@@ -82,17 +87,18 @@ public class GroupPanel extends JPanel {
             final int finalI = i;
             // when button clicked it will show the right ticket page
             button.addActionListener(e -> this.viewFrame.showTicketPage(finalI, groupID));
-            groupPanel.add(button);
-            groupPanel.add(Box.createVerticalStrut(20));
+            ticketsPanel.add(button);
+            ticketsPanel.add(Box.createVerticalStrut(20));
         }
         // Make it a scrollPane, so you can scroll endlessly
-        JScrollPane scrollTicketsPanel = new JScrollPane(groupPanel);
+        JScrollPane scrollTicketsPanel = new JScrollPane(ticketsPanel);
         scrollTicketsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         return scrollTicketsPanel;
     }
 
     private JPanel getButtonsPanel() {
         JPanel buttonPanel = getNewVerticallyAndCenteredPanel();
+        buttonPanel.setBackground(Color.BLUE);
         JButton addTicketButton = new JButton("Add Ticket");
         addTicketButton.setPreferredSize(new Dimension(160, 80));
         addTicketButton.setMaximumSize(addTicketButton.getPreferredSize());
