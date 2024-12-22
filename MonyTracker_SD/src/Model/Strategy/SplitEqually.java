@@ -4,32 +4,35 @@ import Model.Group;
 import Model.Person;
 import Model.Ticket;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
 // Split the total amount equally between the group
 public class SplitEqually implements PayBehaviour {
-    private Group group;
-    private Person payer;
-    private float totalAmount;
+    private final float totalAmount;
+    private final ArrayList<Person> groupMembers;
 
-    public SplitEqually(Ticket ticket) {
-        this.group = ticket.getGroup();
-        this.payer = ticket.getPayer();
-        this.totalAmount = ticket.getTotalAmount();
+    public SplitEqually(float totalAmount, ArrayList<Person> groupMembers) {
+        this.totalAmount = totalAmount;
+        this.groupMembers = groupMembers;
+        // Checked if valid is done when the ticket is being Added
     }
 
     @Override
     public Map<Person, Float> pay() {
         Map<Person, Float> paymentsOwed = new HashMap<>();
-        float payment = totalAmount/group.getSize();
-        for (Person person : group.getGroupMembers()) {
-            if (person != payer) {
-                paymentsOwed.put(person, payment);
-            }
+        float payment = totalAmount/groupMembers.size();
+        for (Person person : groupMembers) {
+            paymentsOwed.put(person, payment);
             System.out.println(person + "Needs to pay: €" + paymentsOwed.get(person));
         }
         return paymentsOwed;
+    }
+
+    @Override
+    public String toString() {
+        return "Split Equally";
     }
 }

@@ -9,38 +9,29 @@ import java.util.Map;
 
 // Choose how much everyone has to pay
 public class SplitUnequally implements PayBehaviour {
-    private Map<Person, Float> personAmounts;
-    private Group group;
-    private Person payer;
-    private float totalAmount;
+    private final float totalAmount;
+    private final Map<Person, Float> personAmounts;
 
-    public SplitUnequally(Map<Person, Float> personAmounts, Ticket ticket) {
+    public SplitUnequally(float totalAmount, Map<Person, Float> personAmounts) {
+        this.totalAmount = totalAmount;
         this.personAmounts = personAmounts;
-        this.group = ticket.getGroup();
-        this.payer = ticket.getPayer();
-        this.totalAmount = ticket.getTotalAmount();
-        // Check if all personAmounts equal the totalAmount
-        float checkSum = 0;
-        for (Person person : group.getGroupMembers()) {
-            if (person != payer) {
-                checkSum += personAmounts.get(person);
-            }
-        }
-        if (checkSum != totalAmount) {
-            throw new IllegalArgumentException("The sum of all person amounts must equal to the total owed amount");
-        }
+        // Checked if valid is done when the ticket is being Added
     }
 
     @Override
     public Map<Person, Float>  pay() {
         Map<Person, Float> paymentsOwed = new HashMap<>();
-        for (Person person : group.getGroupMembers()) {
-            if (person != payer) {
-                float payment = personAmounts.get(person);
-                paymentsOwed.put(person, payment);
-            }
-            System.out.println(person + "Needs to pay: €" + paymentsOwed.get(person));
+        for (Map.Entry<Person, Float> entry : personAmounts.entrySet()) {
+            Person person = entry.getKey();
+            float amount = entry.getValue();
+            paymentsOwed.put(person, amount);
+            System.out.println(person + "Needs to pay: €" + amount);
         }
         return paymentsOwed;
+    }
+
+    @Override
+    public String toString() {
+        return "Split Unequally";
     }
 }
