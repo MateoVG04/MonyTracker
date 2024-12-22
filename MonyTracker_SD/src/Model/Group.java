@@ -44,6 +44,9 @@ public class Group {
     public int getGroupID() {
         return groupID;
     }
+    public ArrayList<Ticket> getTickets() {
+        return tickets;
+    }
     public void addPersonToGroup(Person person) {
         this.groupMembers.add(person);
     }

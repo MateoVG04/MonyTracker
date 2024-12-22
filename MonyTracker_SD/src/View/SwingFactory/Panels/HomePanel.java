@@ -1,15 +1,20 @@
 package View.SwingFactory.Panels;
 
+import Model.Database.Entries.GroupEntry;
+import Model.Database.GroupDB;
+import Model.Group;
 import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class HomePanel extends JPanel {
-    private SwingViewFrame viewFrame;
+    private final SwingViewFrame viewFrame;
+    private GroupDB groupDB;
 
     public HomePanel(SwingViewFrame viewFrame) {
         this.viewFrame = viewFrame;
+        this.groupDB = GroupDB.getInstance();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -41,7 +46,7 @@ public class HomePanel extends JPanel {
         https://fonts.google.com/specimen/Montserrat
         titlesPanel.add(titleLabel);
         // Create SubTitle under Title
-        JLabel subTitleLabel = new JLabel("Groups");
+        JLabel subTitleLabel = new JLabel("Groups:", SwingConstants.CENTER);
         subTitleLabel.setFont(new Font("Montserrat", Font.BOLD, 18));
         subTitleLabel.setForeground(Color.WHITE);
         subTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -58,15 +63,15 @@ public class HomePanel extends JPanel {
         // Very Light Blue
         groupsPanel.setBackground(new Color(51, 204, 255));
         // Add the groups as buttons to the panel with their name
-        for (int i = 0; i<100; i++) {
-            JButton button = new JButton(String.valueOf(i));
+        for (GroupEntry groupEntry : groupDB.getAllGroupEntries()) {
+            Group group = groupEntry.getGroup();
+            JButton button = new JButton("Group: " + group.getGroupName());
             button.setPreferredSize(new Dimension(180, 40));
             button.setMaximumSize(button.getPreferredSize());
             // Small offset because it just couldn't align in the center
             button.setAlignmentX(Component.CENTER_ALIGNMENT + 0.025f);
             // when button is clicked we go to the right group page
-            final int finalI = i;
-            button.addActionListener(e -> this.viewFrame.showGroupPage(finalI));
+            button.addActionListener(e -> this.viewFrame.updateAndShowGroupPage(group.getGroupID()));
             groupsPanel.add(button);
             groupsPanel.add(Box.createVerticalStrut(20));
         }
@@ -85,7 +90,7 @@ public class HomePanel extends JPanel {
         addGroupButton.setMaximumSize(addGroupButton.getPreferredSize());
         addGroupButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         // when button is clicked we go to an add group dialogue
-        addGroupButton.addActionListener(e -> this.viewFrame.addGroup());
+        addGroupButton.addActionListener(e -> this.viewFrame.updateAndShowAddGroupPage());
         buttonPanel.add(addGroupButton);
         return buttonPanel;
     }

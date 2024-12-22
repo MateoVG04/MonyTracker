@@ -26,4 +26,9 @@ public class Person {
     public int getPersonID() {
         return personID;
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

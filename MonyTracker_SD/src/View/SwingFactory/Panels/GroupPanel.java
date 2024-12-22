@@ -1,23 +1,27 @@
 package View.SwingFactory.Panels;
 
+import Model.Database.GroupDB;
 import Model.Group;
+import Model.Ticket;
 import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GroupPanel extends JPanel {
-    private SwingViewFrame viewFrame;
+    private final SwingViewFrame viewFrame;
     private float moneyTotal = 100;
     private float personInDebt;
     private float personYouOwe;
-    private Group group;
-    private int groupID;
+    private final Group group;
+    private final int groupID;
 
     public GroupPanel(SwingViewFrame viewFrame, int groupID) {
         this.viewFrame = viewFrame;
+        GroupDB groupDB = GroupDB.getInstance();
         this.groupID = groupID;
-//this.group = GroupDB.get(groupID);
+        this.group = groupDB.getGroupEntry(groupID).getGroup();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -45,8 +49,7 @@ public class GroupPanel extends JPanel {
         JPanel titlePanel = getNewVerticallyAndCenteredPanel();
         titlePanel.setBackground(Color.BLUE);
         // Title on top of the screen aligned in the center and BIG
-//JLabel titleLabel = new JLabel("Group" + this.group.getGroupName(), SwingConstants.CENTER);
-        JLabel titleLabel = new JLabel("Group " + groupID, SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Group: " + group.getGroupName(), SwingConstants.CENTER);
         titleLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
         titleLabel.setForeground(Color.white);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -78,13 +81,13 @@ public class GroupPanel extends JPanel {
         // Little whitespace before all the tickets
         ticketsPanel.add(Box.createVerticalStrut(20));
         // Add the tickets as buttons to the panel with their name
-//ArrayList<Ticket> tickets = this.group.getTickets();
-        for (int i = 0; i<100; i++) {
-            JButton button = new JButton(String.valueOf(i));
+        ArrayList<Ticket> tickets = this.group.getTickets();
+        for (Ticket ticket : tickets) {
+            // Example: Mike paid €100 SplitEqually
+            JButton button = new JButton(ticket.getPayer().getName() + " payed €" + ticket.getTotalAmount() + ticket.getPayBehaviour().toString());
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            final int finalI = i;
             // when button clicked it will show the right ticket page
-            button.addActionListener(e -> this.viewFrame.showTicketPage(finalI, groupID));
+            button.addActionListener(e -> this.viewFrame.updateAndShowTicketPage(ticket, groupID));
             ticketsPanel.add(button);
             ticketsPanel.add(Box.createVerticalStrut(20));
         }
@@ -101,17 +104,15 @@ public class GroupPanel extends JPanel {
         addTicketButton.setPreferredSize(new Dimension(160, 80));
         addTicketButton.setMaximumSize(addTicketButton.getPreferredSize());
         addTicketButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-//addGroupButton.setBackground(Color.GREEN);
         // When button clicked go to addTicket dialogue
-        addTicketButton.addActionListener(e -> this.viewFrame.addTicket());
+        addTicketButton.addActionListener(e -> this.viewFrame.updateAndShowAddTicketPage(groupID));
         buttonPanel.add(addTicketButton, BorderLayout.LINE_END);
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(160, 80));
         backButton.setMaximumSize(backButton.getPreferredSize());
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-//addGroupButton.setBackground(Color.GREEN);
         // when back button is clicked we go back to home page
-        backButton.addActionListener(e -> this.viewFrame.showHomePage());
+        backButton.addActionListener(e -> this.viewFrame.updateAndShowHomePage());
         buttonPanel.add(backButton, BorderLayout.LINE_START);
         return buttonPanel;
     }

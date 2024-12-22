@@ -3,13 +3,14 @@ package Model.Database;
 import Model.Database.Entries.GroupEntry;
 import Model.Database.Entries.GroupEntryNull;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class GroupDB {
     private final HashMap<Integer, GroupEntry> db;
     private volatile static GroupDB uniqueInstance;
 
-    public GroupDB() {
+    private GroupDB() {
         this.db = new HashMap<>();
     }
 
@@ -44,5 +45,9 @@ public class GroupDB {
         else {
             throw new IllegalArgumentException("Group with ID " + groupID + " does not exist.");
         }
+    }
+
+    public Collection<GroupEntry> getAllGroupEntries() {
+        return db.values();
     }
 }

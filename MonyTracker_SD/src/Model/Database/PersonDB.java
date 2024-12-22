@@ -9,7 +9,7 @@ public class PersonDB {
     private final HashMap<Integer, PersonEntry> db;
     private volatile static PersonDB uniqueInstance;
 
-    public PersonDB() {
+    private PersonDB() {
         this.db = new HashMap<>();
     }
 

@@ -1,5 +1,7 @@
 package View.SwingFactory.Panels;
 
+import Model.Database.GroupDB;
+import Model.Group;
 import Model.Person;
 import Model.Ticket;
 import View.SwingFactory.SwingViewFrame;
@@ -9,19 +11,19 @@ import java.awt.*;
 import java.util.Map;
 
 public class TicketPanel extends JPanel {
-    private SwingViewFrame viewFrame;
+    private final SwingViewFrame viewFrame;
     private Person payer;
     private Map<Person, Float> paymentsOwed;
-    private Ticket ticket;
-    private int ticketID;
-    private int groupID;
+    private final Ticket ticket;
+    private final Group group;
+    private final int groupID;
 
-    public TicketPanel(SwingViewFrame viewFrame, int ticketID, int groupID) {
+    public TicketPanel(SwingViewFrame viewFrame, Ticket ticket, int groupID) {
         this.viewFrame = viewFrame;
-        this.ticketID = ticketID;
         // we keep groupID, so we know which page to go back to
         this.groupID = groupID;
-//this.ticket = TicketDB.get(ticketID);
+        this.group = GroupDB.getInstance().getGroupEntry(groupID).getGroup();
+        this.ticket = ticket;
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -49,7 +51,7 @@ public class TicketPanel extends JPanel {
         JPanel titlePanel = getNewVerticallyAndCenteredPanel();
         titlePanel.setBackground(Color.BLUE);
         // Title on top of the screen aligned in the center and BIG
-        JLabel titleLabel = new JLabel("Ticket " + ticketID, SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("totalAmount €" + ticket.getTotalAmount(), SwingConstants.CENTER);
         titleLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -61,12 +63,10 @@ public class TicketPanel extends JPanel {
     private JPanel getSubTitlePanel() {
         JPanel subTitlePanel = getNewVerticallyAndCenteredPanel();
         subTitlePanel.setBackground(Color.BLUE);
-        JLabel tagLabel = new JLabel("Tag: ", SwingConstants.CENTER);
+        JLabel tagLabel = new JLabel("Tag: " + ticket.getTag(), SwingConstants.CENTER);
         tagLabel.setForeground(Color.WHITE);
-        JLabel descriptionLabel = new JLabel("Description: ", SwingConstants.CENTER);
+        JLabel descriptionLabel = new JLabel("Description: " + ticket.getDescription(), SwingConstants.CENTER);
         descriptionLabel.setForeground(Color.WHITE);
-//JLabel tagLabel = new JLabel("Ticket kind: " + ticket.getTag(), SwingConstants.CENTER);
-//JLabel descriptionLabel = new JLabel("Description: " + ticket.getDescription(), SwingConstants.CENTER);
         Font font = new Font("Montserrat", Font.BOLD, 18);
         tagLabel.setFont(font);
         descriptionLabel.setFont(font);
@@ -82,15 +82,14 @@ public class TicketPanel extends JPanel {
         expensesPanel.setBackground(new Color(51, 204, 255));
         // Little whitespace before all the expenses
         expensesPanel.add(Box.createVerticalStrut(20));
-        // Add the tickets as buttons to the panel with their name
-
-//payer = ticket.getPayer();
-//paymentsOwed = ticket.getPaymentsOwed();
-//JLabel payerLabel = new JLabel(payer.getName() + " paid €" + ticket.getTotalAmount());
-        JLabel payerLabel = new JLabel("Payer: ", SwingConstants.CENTER);
+        payer = ticket.getPayer();
+        paymentsOwed = ticket.getPaymentsOwed();
+        JLabel payerLabel = new JLabel(payer.getName() + " paid €" + ticket.getTotalAmount());
         expensesPanel.add(payerLabel);
-        for (int i = 0; i<5; i++){
-            JLabel personWhoOwesLabel = new JLabel("Person Owes: " + i, SwingConstants.CENTER);
+        for (Map.Entry<Person, Float> entry : paymentsOwed.entrySet()){
+            Person person = entry.getKey();
+            float amount = entry.getValue();
+            JLabel personWhoOwesLabel = new JLabel(person + " Owes: €" + amount, SwingConstants.CENTER);
             expensesPanel.add(personWhoOwesLabel);
         }
 //for (Person person : paymentsOwed.keySet()) {
@@ -112,7 +111,7 @@ public class TicketPanel extends JPanel {
         backButton.setMaximumSize(backButton.getPreferredSize());
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         // when button is clicked we go back to GroupPanel
-        backButton.addActionListener(e -> this.viewFrame.showGroupPage(groupID));
+        backButton.addActionListener(e -> this.viewFrame.updateAndShowGroupPage(groupID));
         buttonPanel.add(backButton);
         return buttonPanel;
     }
