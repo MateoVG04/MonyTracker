@@ -13,6 +13,7 @@ public class Controller {
     public Controller(ModelApp model, SwingViewFrame view) {
         this.model = model;
         this.view = view;
+        this.view.init();
     }
 
     public void addGroup(Group group) {

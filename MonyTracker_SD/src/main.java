@@ -10,9 +10,10 @@ import javax.swing.*;
 
 public class main {
     public static void main(String[] args) {
-        GroupDB groupDatabase = new GroupDB();
+        GroupDB groupDatabase = GroupDB.getInstance();
         ModelApp model = new ModelApp(groupDatabase);
-        SwingViewFrame view = new SwingViewFrame();
+        SwingViewFactory factory = new SwingViewFactory();
+        SwingViewFrame view = factory.getViewFrame();
         Controller controller = new Controller(model, view);
     }
 }
