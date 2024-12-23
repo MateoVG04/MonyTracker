@@ -15,7 +15,7 @@ public class SwingViewFrame extends JFrame {
         this.viewFactory = viewFactory;
     }
 
-    // Can't do this in constructor, because of circular dependency -> viewFactory and viewFrame.
+    // Can't do this in this constructor, because of circular dependency -> viewFactory and viewFrame.
     // viewFactory isn't fully initialised yet, so using it causes a null error later on.
     public void init() {
         setTitle("Money Tracker");
@@ -30,7 +30,6 @@ public class SwingViewFrame extends JFrame {
         // so we can switch between them by doing cardlayout.show(cardPanel, "PanelName");
         cardPanel.add(homePanel, "HOME");
         add(cardPanel);
-        updateAndShowHomePage();
         setVisible(true);
     }
 
@@ -72,7 +71,6 @@ public class SwingViewFrame extends JFrame {
         // add the new addGroupPanel and show it
         cardPanel.add(addGroupPanel, "ADD GROUP");
         cardLayout.show(cardPanel, "ADD GROUP");
-
     }
 
     // groupID so you know which group to go back to
@@ -83,10 +81,5 @@ public class SwingViewFrame extends JFrame {
         // add the new addTicketPanel and show it
         cardPanel.add(addTicketPanel, "ADD TICKET");
         cardLayout.show(cardPanel, "ADD TICKET");
-
-    }
-
-    public void update() {
-        // update the whole view
     }
 }

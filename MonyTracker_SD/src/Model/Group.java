@@ -35,6 +35,7 @@ public class Group {
             transactions.put(person1,owedList);
         }
     }
+
     public String getGroupName() {
         return groupName;
     }

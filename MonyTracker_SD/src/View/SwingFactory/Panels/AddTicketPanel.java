@@ -1,22 +1,19 @@
 package View.SwingFactory.Panels;
 
-import Model.Database.Entries.GroupEntry;
 import Model.Group;
 import Model.Person;
-import Model.Strategy.PayBehaviour;
-import Model.Strategy.SplitByPercentage;
-import Model.Strategy.SplitEqually;
-import Model.Ticket;
 import View.SwingFactory.SwingViewFrame;
 import Model.Database.GroupDB;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Map;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class AddTicketPanel extends JPanel {
+public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
+    private final Controller controller;
     private JComboBox<Person> payerComboBox;
     private JTextField totalAmountField;
     private JComboBox<String> payBehaviourComboBox;
@@ -25,8 +22,10 @@ public class AddTicketPanel extends JPanel {
     private final int groupID;
     private final Group group;
 
-    public AddTicketPanel(SwingViewFrame viewFrame, int groupID) {
+    public AddTicketPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
+        this.controller = controller;
+        controller.addPropertyChangeListener(this);
         this.groupID = groupID;
         this.group = GroupDB.getInstance().getGroupEntry(groupID).getGroup();
         // We use this BoxLayout, so all the SubPanels will come under each other
@@ -154,26 +153,24 @@ public class AddTicketPanel extends JPanel {
     }
 
     private void saveTicket() {
-        int totalAmount = Integer.parseInt(totalAmountField.getText());
-        if (totalAmount <= 0) {
-            JOptionPane.showMessageDialog(this, "The totalAmount must be greater than 0");
-            return;
-        }
+        float totalAmount = Float.parseFloat(totalAmountField.getText());
         Person payer = (Person) payerComboBox.getSelectedItem();
         String stringPayBehaviour = (String) payBehaviourComboBox.getSelectedItem();
         String tag = tagField.getText();
         String description = descriptionField.getText();
-        if (tag.isEmpty()) {
-            tag = "Standard";
+        controller.addTicketToGroup(group, totalAmount, payer, stringPayBehaviour, tag, description);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        // When the controller fires error -> show error message
+        if (evt.getPropertyName().equals("error")) {
+            JOptionPane.showMessageDialog(viewFrame, evt.getNewValue());
         }
-        PayBehaviour payBehaviour;
-        //if (stringPayBehaviour.equals("SplitEqually")) {
-            payBehaviour = new SplitEqually(totalAmount, group.getGroupMembers());
-        //}
-        Ticket ticket = new Ticket(totalAmount, payer, group, payBehaviour, tag, description);
-        group.addTicket(ticket);
-        viewFrame.updateAndShowGroupPage(groupID);
+        // When the controller fires addedTicket -> ticket was added successfully to the group
+        else if (evt.getPropertyName().equals("addedTicket")) {
+            JOptionPane.showMessageDialog(viewFrame, "Ticket was added succesfully to group " + this.group.getGroupName());
+            viewFrame.updateAndShowGroupPage(groupID);
+        }
     }
 }
-
--

@@ -1,5 +1,6 @@
 package View.SwingFactory;
 
+import Controller.Controller;
 import Model.Ticket;
 import View.AbstractViewFactory;
 import View.SwingFactory.Panels.*;
@@ -9,14 +10,14 @@ import javax.swing.*;
 public class SwingViewFactory implements AbstractViewFactory<JPanel> {
     // We implement the abstractFactory with JPanel as type
     private final SwingViewFrame viewFrame;
+    private final Controller controller;
 
     // create the frame, on which we will create the panels
-    public SwingViewFactory() {
+    public SwingViewFactory(Controller controller) {
         this.viewFrame = new SwingViewFrame(this);
-    }
-
-    public SwingViewFrame getViewFrame() {
-        return this.viewFrame;
+        this.controller = controller;
+        // only when swingViewFactory is initialised we can call viewFrame.init() because of circular dependency
+        viewFrame.init();
     }
 
     @Override
@@ -26,7 +27,7 @@ public class SwingViewFactory implements AbstractViewFactory<JPanel> {
 
     @Override
     public JPanel createGroupPage(int groupID) {
-        return new GroupPanel(this.viewFrame, groupID);
+        return new GroupPanel(this.viewFrame, this.controller, groupID);
     }
 
     @Override
@@ -36,11 +37,11 @@ public class SwingViewFactory implements AbstractViewFactory<JPanel> {
 
     @Override
     public JPanel createAddGroupPage() {
-        return new AddGroupPanel(this.viewFrame);
+        return new AddGroupPanel(this.viewFrame, this.controller);
     }
 
     @Override
     public JPanel createAddTicketPage(int groupID) {
-        return new AddTicketPanel(this.viewFrame, groupID);
+        return new AddTicketPanel(this.viewFrame, this.controller, groupID);
     }
 }

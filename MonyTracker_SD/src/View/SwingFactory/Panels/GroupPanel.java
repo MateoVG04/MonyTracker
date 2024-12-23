@@ -1,5 +1,6 @@
 package View.SwingFactory.Panels;
 
+import Controller.Controller;
 import Model.Database.GroupDB;
 import Model.Group;
 import Model.Ticket;
@@ -7,18 +8,23 @@ import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
-public class GroupPanel extends JPanel {
+public class GroupPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
-    private float moneyTotal = 100;
+    private float moneyTotal;
     private float personInDebt;
     private float personYouOwe;
     private final Group group;
+    private final Controller controller;
     private final int groupID;
 
-    public GroupPanel(SwingViewFrame viewFrame, int groupID) {
+    public GroupPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
+        this.controller = controller;
+        controller.addPropertyChangeListener(this);
         GroupDB groupDB = GroupDB.getInstance();
         this.groupID = groupID;
         this.group = groupDB.getGroupEntry(groupID).getGroup();
@@ -113,8 +119,23 @@ public class GroupPanel extends JPanel {
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         // when back button is clicked we go back to home page
         backButton.addActionListener(e -> this.viewFrame.updateAndShowHomePage());
-        buttonPanel.add(backButton, BorderLayout.LINE_START);
+        buttonPanel.add(backButton, BorderLayout.CENTER);
+        JButton removeGroupButton = new JButton("Remove Group");
+        removeGroupButton.setPreferredSize(new Dimension(160, 80));
+        removeGroupButton.setMaximumSize(removeGroupButton.getPreferredSize());
+        removeGroupButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removeGroupButton.setBackground(Color.RED);
+        removeGroupButton.addActionListener(e -> removeGroup());
+        buttonPanel.add(removeGroupButton, BorderLayout.LINE_START);
         return buttonPanel;
+    }
+
+    private void removeGroup() {
+        int option = JOptionPane.showConfirmDialog(viewFrame, "Are you sure you want to delete this group? This can't be undone!", null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (option == JOptionPane.YES_OPTION) {
+            controller.removeGroup(group.getGroupID());
+        }
+        // If the user clicks no, we will do nothing and the group is not removed
     }
 
     private static JPanel getNewVerticallyAndCenteredPanel() {
@@ -122,5 +143,13 @@ public class GroupPanel extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         return panel;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("removedGroup")) {
+            JOptionPane.showMessageDialog(viewFrame, "Group with ID " + evt.getNewValue() + " was removed successfully");
+            viewFrame.updateAndShowHomePage();
+        }
     }
 }

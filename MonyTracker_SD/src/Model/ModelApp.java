@@ -3,35 +3,33 @@ package Model;
 import Model.Database.Entries.GroupEntry;
 import Model.Database.GroupDB;
 
-import java.util.ArrayList;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public class ModelApp {
-    private GroupDB groupDatabase;
+    private final PropertyChangeSupport support;
 
-    public ModelApp(GroupDB groupDatabase) {
-        this.groupDatabase = groupDatabase;
+    public ModelApp() {
+        this.support = new PropertyChangeSupport(this);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
     }
 
     public void addGroup(Group group) {
         GroupEntry groupEntry = new GroupEntry(group);
-        groupDatabase.addGroupEntry(groupEntry);
+        GroupDB.getInstance().addGroupEntry(groupEntry);
+        support.firePropertyChange("addedGroup", null, group);
     }
 
     public void removeGroup(int groupID) {
-        groupDatabase.removeGroupEntry(groupID);
+        GroupDB.getInstance().removeGroupEntry(groupID);
+        support.firePropertyChange("removedGroup", null, groupID);
     }
 
-    public void addTicketToGroup(Ticket ticket, int groupID) {
-        GroupEntry groupEntry = groupDatabase.getGroupEntry(groupID);
-        if (groupEntry != null) {
-            groupEntry.getGroup().addTicket(ticket);
-        }
-    }
-
-    public void addPersonToGroup(Person person, int groupID) {
-        GroupEntry groupEntry = groupDatabase.getGroupEntry(groupID);
-        if (groupEntry != null) {
-            groupEntry.getGroup().addPersonToGroup(person);
-        }
+    public void addTicketToGroup(Ticket ticket, Group group) {
+         group.addTicket(ticket);
+         support.firePropertyChange("addedTicket", null, ticket);
     }
 }

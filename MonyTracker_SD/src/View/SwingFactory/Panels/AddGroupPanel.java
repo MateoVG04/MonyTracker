@@ -1,27 +1,26 @@
 package View.SwingFactory.Panels;
 
-import Model.Database.Entries.GroupEntry;
-import Model.Group;
-import Model.Person;
 import View.SwingFactory.SwingViewFrame;
-import Model.Database.GroupDB;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 
-public class AddGroupPanel extends JPanel {
+public class AddGroupPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
+    private final Controller controller;
     private JTextField groupNameField;
-    private ArrayList<JTextField> personNameFields;
+    private final ArrayList<JTextField> personNameFields;
     private JPanel personNamePanel;
-    private JScrollPane personNameScroller;
-    private GroupDB groupDB;
 
-    public AddGroupPanel(SwingViewFrame viewFrame) {
+    public AddGroupPanel(SwingViewFrame viewFrame, Controller controller) {
         this.viewFrame = viewFrame;
-        this.groupDB = GroupDB.getInstance();
-        // userDB
+        this.controller = controller;
+        // The view observes the controller
+        controller.addPropertyChangeListener(this);
         personNameFields = new ArrayList<>();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -29,21 +28,17 @@ public class AddGroupPanel extends JPanel {
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
         setBackground(Color.BLUE);
         // Title panel
-        JPanel titlePanel = getTitlePanel();
-        add(titlePanel);
+        add(getTitlePanel());
         // Group name input panel
-        JPanel groupNamePanel = getGroupNamePanel();
-        add(groupNamePanel);
+        add(getGroupNamePanel());
         // Person name input panel
         personNamePanel = getPersonNamePanel();
-        // Very Light Blue
-        personNamePanel.setBackground(new Color(51, 204, 255));
-        personNameScroller = new JScrollPane(personNamePanel);
+        // Very Light Blue;
+        JScrollPane personNameScroller = new JScrollPane(personNamePanel);
         personNameScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(personNameScroller);
         // Buttons panel
-        JPanel buttonsPanel = getButtonsPanel();
-        add(buttonsPanel);
+        add(getButtonsPanel());
     }
 
     private JPanel getTitlePanel() {
@@ -125,32 +120,24 @@ public class AddGroupPanel extends JPanel {
 
     private void saveGroup() {
         String groupName = groupNameField.getText();
-        if (groupName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a group name");
-            return;
-        }
-        Group group = new Group(groupName);
-        ArrayList<String> persons = new ArrayList<>();
+        ArrayList<String> personNames = new ArrayList<>();
         for (JTextField personNameField : personNameFields) {
             String personName = personNameField.getText();
-            if (!personName.isEmpty()) {
-                // eerst nog checken of de person in onze database is
-                // if (personName in personDB) {
-                    // persons.add(personName)
-                    // PersonEntry personEntry = personDB.getPersonEntry(groupName)
-                    // Person person = personEntry.getPerson()
-                    // group.addPersonToGroup(person)
-                persons.add(personName);
-                group.addPersonToGroup(new Person(personName, ""));
-            }
+            personNames.add(personName);
         }
-        if (persons.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter at least one valid person");
-            return;
+        controller.addGroup(groupName, personNames);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        // When the controller fires error -> show error message
+        if (evt.getPropertyName().equals("error")) {
+            JOptionPane.showMessageDialog(viewFrame, evt.getNewValue());
         }
-        // Logic to save the group to our database
-        groupDB.addGroupEntry(new GroupEntry(group));
-        System.out.println("saved group" + groupName);
-        viewFrame.updateAndShowHomePage();
+        // When the controller fires addedGroup -> group was added successfully to the model
+        else if (evt.getPropertyName().equals("addedGroup")) {
+            JOptionPane.showMessageDialog(viewFrame, "Group " + evt.getNewValue() + " was added successfully");
+            viewFrame.updateAndShowHomePage();
+        }
     }
 }
