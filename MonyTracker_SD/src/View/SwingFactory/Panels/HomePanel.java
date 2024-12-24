@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class HomePanel extends JPanel {
     private final SwingViewFrame viewFrame;
-    private GroupDB groupDB;
+    private final GroupDB groupDB;
 
     public HomePanel(SwingViewFrame viewFrame) {
         this.viewFrame = viewFrame;

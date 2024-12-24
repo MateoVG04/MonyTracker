@@ -1,7 +1,7 @@
 package View.SwingFactory;
 
-import Controller.Controller;
 import Model.Ticket;
+import Controller.Controller;
 import View.AbstractViewFactory;
 import View.SwingFactory.Panels.*;
 

@@ -26,6 +26,10 @@ public class Controller implements PropertyChangeListener {
         support.addPropertyChangeListener(listener);
     }
 
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
+    }
+
     public void addGroup(String groupName, ArrayList<String> personNames) {
         // if no groupName was provided, show error message and return to old state
         if (groupName.isEmpty()) {

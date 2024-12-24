@@ -4,6 +4,7 @@ import Model.Ticket;
 
 public interface AbstractViewFactory<Type> {
     // We use generics, so you can also use other libraries than JPanel to create a GUI
+    // You just need to implement these methods and create a viewFrame to make it work.
     Type createHomePage();
     // groupID so you know which group to go to
     Type createGroupPage(int groupID);

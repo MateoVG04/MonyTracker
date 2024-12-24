@@ -54,7 +54,7 @@ public class SwingViewFrame extends JFrame {
     }
 
     public void updateAndShowTicketPage(Ticket ticket, int groupID) {
-        // Make a new ticketPanel with this ticketID
+        // Make a new ticketPanel with this ticket in the group of groupID
         JPanel ticketPanel = viewFactory.createTicketPage(ticket, groupID);
         // Remove previous ticketPanel if it exists
         remove(ticketPanel);

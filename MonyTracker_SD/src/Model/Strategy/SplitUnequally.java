@@ -1,8 +1,6 @@
 package Model.Strategy;
 
-import Model.Group;
 import Model.Person;
-import Model.Ticket;
 
 import java.util.HashMap;
 import java.util.Map;

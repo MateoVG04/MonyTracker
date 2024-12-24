@@ -5,6 +5,7 @@ import View.SwingFactory.SwingViewFactory;
 
 public class main {
     public static void main(String[] args) {
+        // Create the group database
         GroupDB.getInstance();
         ModelApp model = new ModelApp();
         Controller controller = new Controller(model);

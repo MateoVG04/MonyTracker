@@ -1,7 +1,7 @@
 package View.SwingFactory.Panels;
 
-import View.SwingFactory.SwingViewFrame;
 import Controller.Controller;
+import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +19,6 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
     public AddGroupPanel(SwingViewFrame viewFrame, Controller controller) {
         this.viewFrame = viewFrame;
         this.controller = controller;
-        // The view observes the controller
-        controller.addPropertyChangeListener(this);
         personNameFields = new ArrayList<>();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -119,6 +117,8 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
     }
 
     private void saveGroup() {
+        // The view observes the controller
+        controller.addPropertyChangeListener(this);
         String groupName = groupNameField.getText();
         ArrayList<String> personNames = new ArrayList<>();
         for (JTextField personNameField : personNameFields) {
@@ -126,6 +126,7 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
             personNames.add(personName);
         }
         controller.addGroup(groupName, personNames);
+        controller.removePropertyChangeListener(this);
     }
 
     @Override

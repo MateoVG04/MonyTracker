@@ -1,9 +1,9 @@
 package View.SwingFactory.Panels;
 
-import Controller.Controller;
 import Model.Database.GroupDB;
 import Model.Group;
 import Model.Ticket;
+import Controller.Controller;
 import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
@@ -24,7 +24,6 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
     public GroupPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
         this.controller = controller;
-        controller.addPropertyChangeListener(this);
         GroupDB groupDB = GroupDB.getInstance();
         this.groupID = groupID;
         this.group = groupDB.getGroupEntry(groupID).getGroup();
@@ -131,10 +130,12 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
     }
 
     private void removeGroup() {
+        controller.addPropertyChangeListener(this);
         int option = JOptionPane.showConfirmDialog(viewFrame, "Are you sure you want to delete this group? This can't be undone!", null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (option == JOptionPane.YES_OPTION) {
             controller.removeGroup(group.getGroupID());
         }
+        controller.removePropertyChangeListener(this);
         // If the user clicks no, we will do nothing and the group is not removed
     }
 

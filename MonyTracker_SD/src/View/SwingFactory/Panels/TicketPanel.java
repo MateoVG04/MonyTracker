@@ -1,7 +1,5 @@
 package View.SwingFactory.Panels;
 
-import Model.Database.GroupDB;
-import Model.Group;
 import Model.Person;
 import Model.Ticket;
 import View.SwingFactory.SwingViewFrame;
@@ -12,17 +10,13 @@ import java.util.Map;
 
 public class TicketPanel extends JPanel {
     private final SwingViewFrame viewFrame;
-    private Person payer;
-    private Map<Person, Float> paymentsOwed;
     private final Ticket ticket;
-    private final Group group;
     private final int groupID;
 
     public TicketPanel(SwingViewFrame viewFrame, Ticket ticket, int groupID) {
         this.viewFrame = viewFrame;
         // we keep groupID, so we know which page to go back to
         this.groupID = groupID;
-        this.group = GroupDB.getInstance().getGroupEntry(groupID).getGroup();
         this.ticket = ticket;
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -82,8 +76,8 @@ public class TicketPanel extends JPanel {
         expensesPanel.setBackground(new Color(51, 204, 255));
         // Little whitespace before all the expenses
         expensesPanel.add(Box.createVerticalStrut(20));
-        payer = ticket.getPayer();
-        paymentsOwed = ticket.getPaymentsOwed();
+        Person payer = ticket.getPayer();
+        Map<Person, Float> paymentsOwed = ticket.getPaymentsOwed();
         JLabel payerLabel = new JLabel(payer.getName() + " paid €" + ticket.getTotalAmount());
         expensesPanel.add(payerLabel);
         for (Map.Entry<Person, Float> entry : paymentsOwed.entrySet()){
@@ -92,10 +86,6 @@ public class TicketPanel extends JPanel {
             JLabel personWhoOwesLabel = new JLabel(person + " Owes: €" + amount, SwingConstants.CENTER);
             expensesPanel.add(personWhoOwesLabel);
         }
-//for (Person person : paymentsOwed.keySet()) {
-//    JLabel personWhoOwesLabel = new JLabel(person.getName() + " owes €" + paymentsOwed.get(person));
-//    expensesPanel.add(personWhoOwesLabel);
-//}
         // Make it a scrollPane, so you can scroll endlessly
         JScrollPane scrollExpensesPanel = new JScrollPane(expensesPanel);
         scrollExpensesPanel.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -2,9 +2,9 @@ package View.SwingFactory.Panels;
 
 import Model.Group;
 import Model.Person;
-import View.SwingFactory.SwingViewFrame;
 import Model.Database.GroupDB;
 import Controller.Controller;
+import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +25,6 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     public AddTicketPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
         this.controller = controller;
-        controller.addPropertyChangeListener(this);
         this.groupID = groupID;
         this.group = GroupDB.getInstance().getGroupEntry(groupID).getGroup();
         // We use this BoxLayout, so all the SubPanels will come under each other
@@ -153,12 +152,14 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     }
 
     private void saveTicket() {
+        controller.addPropertyChangeListener(this);
         float totalAmount = Float.parseFloat(totalAmountField.getText());
         Person payer = (Person) payerComboBox.getSelectedItem();
         String stringPayBehaviour = (String) payBehaviourComboBox.getSelectedItem();
         String tag = tagField.getText();
         String description = descriptionField.getText();
         controller.addTicketToGroup(group, totalAmount, payer, stringPayBehaviour, tag, description);
+        controller.removePropertyChangeListener(this);
     }
 
     @Override

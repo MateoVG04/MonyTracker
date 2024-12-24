@@ -1,7 +1,5 @@
 package Model;
 
-import Model.Strategy.PayBehaviour;
-
 public class Person {
     private final String name;
     private final String email;
@@ -27,6 +25,7 @@ public class Person {
         return personID;
     }
 
+    // To print personName in the view
     @Override
     public String toString() {
         return this.getName();
