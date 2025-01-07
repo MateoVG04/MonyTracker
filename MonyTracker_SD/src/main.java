@@ -1,12 +1,15 @@
 import Controller.Controller;
 import Model.Database.GroupDB;
 import Model.ModelApp;
+import Model.Observers.EmailSender;
 import View.SwingFactory.SwingViewFactory;
 
 public class main {
     public static void main(String[] args) {
         // Create the group database
-        GroupDB.getInstance();
+        GroupDB groupDB = GroupDB.getInstance();
+        EmailSender emailSender = new EmailSender();
+        groupDB.addPropertyChangeListener(emailSender);
         ModelApp model = new ModelApp();
         Controller controller = new Controller(model);
         // SwingViewFactory will create the view and initialise it

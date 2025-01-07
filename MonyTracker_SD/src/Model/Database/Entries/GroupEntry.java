@@ -2,7 +2,10 @@ package Model.Database.Entries;
 
 import Model.Group;
 
-public class GroupEntry {
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+public class GroupEntry{
     private final Group group;
 
     public GroupEntry(Group group) {
