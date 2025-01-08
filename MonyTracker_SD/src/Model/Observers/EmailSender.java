@@ -1,5 +1,6 @@
 package Model.Observers;
 
+import Model.Database.GroupDB;
 import Model.Group;
 import Model.Person;
 
@@ -17,9 +18,18 @@ public class EmailSender implements PropertyChangeListener{
     private ArrayList<Person> groupMembers;
     private Group group;
     private final String MoneyTrackerEmail = "MonyTrackerSD@gmail.com";
-    private final String MoneyTrackerPassword = "money_tracker1";
-    public EmailSender() {
-        super();
+    private final String MoneyTrackerPassword = "zxdm kuek orql iutn";
+    private volatile static EmailSender uniqueInstance;
+
+    public static EmailSender getInstanceEmailSender(){
+        if (uniqueInstance == null){
+            synchronized (EmailSender.class){
+                if (uniqueInstance == null){
+                    uniqueInstance = new EmailSender();
+                }
+            }
+        }
+        return uniqueInstance;
     }
     // als je een email wilt sturen, moet je eerst de group meegeven naar wie er een mail moet verstuurd worden
     public void groupToSend(Group group) {
@@ -47,17 +57,21 @@ public class EmailSender implements PropertyChangeListener{
 
             // sessie maken
             Session session = Session.getInstance(props,auth);
+            String TestAddress = "lies.foubert@gmail.com";
 
             try{
                 for (Person person : groupMembers) {
                     Message message = new MimeMessage(session);
-                    message.setFrom(new InternetAddress(MoneyTrackerEmail));
-                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(person.getEmail()));
+                    InternetAddress from = new InternetAddress(MoneyTrackerEmail);
+                    message.setFrom(from);
+                    // set de ontvanger email tijdelijk een test adres, maar later moet dit .parse(person.getEmail) zijn
+                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TestAddress));
                     message.setSubject(subject);
                     String body = "Hallo "+person.getName()+",\nU bent toegevoegd aan de groep: "+this.group.getGroupName()+" " +
                             "op MoneyTracker.\nMet vriendelijke groeten,\nHet MoneyTracker Team!";
                     message.setText(body);
-
+                    message.saveChanges();
+                    System.out.println("message: "+from.getAddress());
                     // verstuur nu de mail
                     Transport.send(message);
                 }

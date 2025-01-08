@@ -14,7 +14,7 @@ public class GroupDB {
     private final HashMap<Integer, GroupEntry> db;
     private volatile static GroupDB uniqueInstance;
     private final PropertyChangeSupport support;
-    private final EmailSender emailSender = new EmailSender();
+    private final EmailSender emailSender = EmailSender.getInstanceEmailSender();
 
     private GroupDB() {
         this.db = new HashMap<>();
@@ -44,6 +44,7 @@ public class GroupDB {
             GroupEntry oldEntry = db.put(groupID, groupEntry);
             // geef de group door aan de emailSender zodat de email sender naar wie hij een email moet sturen
             emailSender.groupToSend(groupEntry.getGroup());
+
             // ER IS IETS AANGEPAST -> email sender moet email sturen
             support.firePropertyChange("groupEntryAdded",oldEntry,groupEntry);
         } else {

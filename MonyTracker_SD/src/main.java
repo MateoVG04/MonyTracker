@@ -8,7 +8,7 @@ public class main {
     public static void main(String[] args) {
         // Create the group database
         GroupDB groupDB = GroupDB.getInstance();
-        EmailSender emailSender = new EmailSender();
+        EmailSender emailSender = EmailSender.getInstanceEmailSender();
         groupDB.addPropertyChangeListener(emailSender);
         ModelApp model = new ModelApp();
         Controller controller = new Controller(model);
