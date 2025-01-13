@@ -6,9 +6,7 @@ import Model.Group;
 import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 
 public class HomePanel extends JPanel {
     private final SwingViewFrame viewFrame;

@@ -22,7 +22,7 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
     private final Group group;
     private final Controller controller;
     private final int groupID;
-    private final Map<Person, Map<Person,Float>> transactions;
+    //private final Map<Person, Map<Person,Float>> transactions;
 
     public GroupPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
@@ -30,7 +30,7 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         GroupDB groupDB = GroupDB.getInstance();
         this.groupID = groupID;
         this.group = groupDB.getGroupEntry(groupID).getGroup();
-        this.transactions = group.calculateTransactions();
+        //this.transactions = group.calculateTransactions();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
@@ -17,6 +19,9 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     private JComboBox<Person> payerComboBox;
     private JTextField totalAmountField;
     private JComboBox<String> payBehaviourComboBox;
+    private JPanel personInputsPanel;
+    private JScrollPane personInputsScrollPanel;
+    private final Map<Person, Float> personAmounts = new HashMap<>();
     private JTextField tagField;
     private JTextField descriptionField;
     private final int groupID;
@@ -32,12 +37,12 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
         setBackground(Color.BLUE);
-        // Title panel
-        JPanel titlePanel = getTitlePanel();
-        add(titlePanel);
+        // Add All the subPanels to this Panel
+        add(getTitlePanel());
         add(getTotalAmountPanel());
         add(getPayerPanel());
         add(getPayBehaviourPanel());
+        add(getScrollPersonInputsPanel());
         add(getTagPanel());
         add(getDescriptionPanel());
         add(getButtonsPanel());
@@ -97,12 +102,51 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
         JLabel payBehaviourLabel = new JLabel("Pay Behaviour:");
         payBehaviourLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
         payBehaviourLabel.setForeground(Color.WHITE);
-        String[] payBehaviours = {"Split Equally", "SplitByPercentage", "SplitUnequally"};
+        String[] payBehaviours = {"Split Equally", "Split By Percentage", "Split Unequally"};
         payBehaviourComboBox = new JComboBox<>(payBehaviours);
         payBehaviourComboBox.setMaximumSize(new Dimension(200, 30));
+        payBehaviourComboBox.addActionListener(e -> updateAddPersonInputs());
         payBehaviourPanel.add(payBehaviourLabel);
         payBehaviourPanel.add(payBehaviourComboBox);
         return payBehaviourPanel;
+    }
+
+    private JScrollPane getScrollPersonInputsPanel() {
+        personInputsPanel = new JPanel();
+        personInputsPanel.setLayout(new BoxLayout(personInputsPanel, BoxLayout.Y_AXIS));
+        personInputsPanel.setBackground(Color.BLUE);
+        personInputsScrollPanel = new JScrollPane(personInputsPanel);
+        personInputsScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        return personInputsScrollPanel;
+    }
+
+    // For SplitUnequally and ByPercentage we have to input the persons percentages or money owed.
+    // gets called when payBehaviourComboBox is clicked
+    private void updateAddPersonInputs() {
+        personInputsPanel.removeAll();
+        String stringPayBehaviour = (String) payBehaviourComboBox.getSelectedItem();
+        if (stringPayBehaviour != null && !stringPayBehaviour.equals("Split Equally")) {
+            for (Person person : group.getGroupMembers()) {
+                JPanel personPanel = new JPanel();
+                personPanel.setLayout(new BoxLayout(personPanel, BoxLayout.X_AXIS));
+                personPanel.setBackground(Color.BLUE);
+                JLabel personLabel = new JLabel(person.getName() + ":");
+                personLabel.setFont(new Font("Montserrat", Font.BOLD, 32));
+                personLabel.setForeground(Color.WHITE);
+                JTextField amountField = new JTextField(20);
+                amountField.setMaximumSize(new Dimension(200, 30));
+                personPanel.add(personLabel);
+                personPanel.add(amountField);
+                personInputsPanel.add(personPanel);
+                Float personAmount = 0f;
+                if (!amountField.getText().isEmpty()) {
+                    personAmount = Float.parseFloat(amountField.getText());
+                }
+                personAmounts.put(person, personAmount);
+            }
+        }
+        personInputsPanel.revalidate();
+        personInputsPanel.repaint();
     }
 
     private JPanel getTagPanel() {
@@ -153,19 +197,18 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
 
     private void saveTicket() {
         controller.addPropertyChangeListener(this);
-        float totalAmount;
+        float totalAmount = 0;
         try {
             totalAmount = Float.parseFloat(totalAmountField.getText());
         }
         catch (Exception e) {
-            totalAmount = 0;
             System.out.print("No totalAmount added");
         }
         Person payer = (Person) payerComboBox.getSelectedItem();
         String stringPayBehaviour = (String) payBehaviourComboBox.getSelectedItem();
         String tag = tagField.getText();
         String description = descriptionField.getText();
-        controller.addTicketToGroup(group, totalAmount, payer, stringPayBehaviour, tag, description);
+        controller.addTicketToGroup(group, totalAmount, payer, stringPayBehaviour, tag, description, personAmounts);
         controller.removePropertyChangeListener(this);
     }
 
@@ -177,7 +220,7 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
         }
         // When the controller fires addedTicket -> ticket was added successfully to the group
         else if (evt.getPropertyName().equals("addedTicket")) {
-            JOptionPane.showMessageDialog(viewFrame, "Ticket was added succesfully to group " + this.group.getGroupName());
+            JOptionPane.showMessageDialog(viewFrame, "Ticket was added successfully to group " + this.group.getGroupName());
             viewFrame.updateAndShowGroupPage(groupID);
         }
     }

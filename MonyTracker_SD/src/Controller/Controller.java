@@ -5,13 +5,16 @@ import Model.Group;
 import Model.ModelApp;
 import Model.Person;
 import Model.Strategy.PayBehaviour;
+import Model.Strategy.SplitByPercentage;
 import Model.Strategy.SplitEqually;
+import Model.Strategy.SplitUnequally;
 import Model.Ticket;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Controller implements PropertyChangeListener {
     private final ModelApp model;
@@ -60,7 +63,7 @@ public class Controller implements PropertyChangeListener {
         model.removeGroup(groupID);
     }
 
-    public void addTicketToGroup(Group group, float totalAmount, Person payer, String stringPayBehaviour, String tag, String description) {
+    public void addTicketToGroup(Group group, float totalAmount, Person payer, String stringPayBehaviour, String tag, String description, Map<Person, Float> personAmounts) {
         // Check if totalAmount is valid
         if (totalAmount <= 0) {
             support.firePropertyChange("error", null, "Total amount cannot be zero or negative.");
@@ -74,9 +77,36 @@ public class Controller implements PropertyChangeListener {
         if (description == null) {
             description = "";
         }
-        //if (stringPayBehaviour.equals("SplitEqually")) {
-        PayBehaviour payBehaviour = new SplitEqually(totalAmount, group.getGroupMembers());
-        //}
+        PayBehaviour payBehaviour;
+        if (stringPayBehaviour.equals("Split Unequally")) {
+            // Check if the totalAmount equals the total amount inputs
+            float checkTotalAmount = 0;
+            for (float amount : personAmounts.values()) {
+                checkTotalAmount += amount;
+            }
+            float difference = checkTotalAmount - totalAmount;
+            if (difference > 0.01) {
+                support.firePropertyChange("error", null, "Total inputted amounts should be equal to the total amount.");
+                return;
+            }
+            payBehaviour = new SplitUnequally(totalAmount, personAmounts);
+        }
+        else if (stringPayBehaviour.equals("Split By Percentage")) {
+            // Check if the total percentages equal 100%
+            float checkPercentages = 0;
+            for (Float percentage : personAmounts.values()) {
+                checkPercentages += percentage;
+            }
+            float difference = checkPercentages - 100;
+            if (difference > 0.01) {
+                support.firePropertyChange("error", null, "Total inputted percentages should be equal to 100%.");
+                return;
+            }
+            payBehaviour = new SplitByPercentage(totalAmount, personAmounts);
+        }
+        else {
+            payBehaviour = new SplitEqually(totalAmount, group.getGroupMembers());
+        }
         Ticket ticket = new Ticket(totalAmount, payer, group, payBehaviour, tag, description);
         model.addTicketToGroup(ticket, group);
     }

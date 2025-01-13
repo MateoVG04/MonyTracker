@@ -25,13 +25,13 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
         setBackground(Color.BLUE);
-        // Title panel
+        // Add all the subPanels to this panel
         add(getTitlePanel());
         // Group name input panel
         add(getGroupNamePanel());
         // Person name input panel
         personNamePanel = getPersonNamePanel();
-        // Very Light Blue;
+        // Scroll panel so you can scroll between all the members you want to add
         JScrollPane personNameScroller = new JScrollPane(personNamePanel);
         personNameScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(personNameScroller);
