@@ -23,22 +23,14 @@ public class TicketPanel extends JPanel {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
         setBackground(Color.BLUE);
-        // Title panel
-        JPanel titlePanel = getTitlePanel();
         // add titlePanel to top of the Home Page
-        add(titlePanel);
+        add(getTitlePanel());
         // Panel to show tag of ticket and a description
-        JPanel subTitlePanel = getSubTitlePanel();
-        // Add the subTitlePanel under the title
-        add(subTitlePanel);
+        add(getSubTitlePanel());
         // Scroll panel with all the expenses in this ticket
-        JScrollPane scrollExpensesPanel = getExpensesPanel();
-        // Add the scrollPanel in the middle of the screen
-        add(scrollExpensesPanel);
-        // back button
-        JPanel buttonPanel = getButtonPanel();
-        // Add the button at the bottom of the screen
-        add(buttonPanel);
+        add(getExpensesPanel());
+        // Back button
+        add(getButtonPanel());
     }
 
     private JPanel getTitlePanel() {

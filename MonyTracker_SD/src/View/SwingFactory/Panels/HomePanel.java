@@ -6,7 +6,9 @@ import Model.Group;
 import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 
 public class HomePanel extends JPanel {
     private final SwingViewFrame viewFrame;
@@ -20,17 +22,12 @@ public class HomePanel extends JPanel {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
         setBackground(Color.BLUE);
-        // Title and SubTitle panel, so they always stay on screen
-        JPanel titlesPanel = getTitlesPanel();
         // add titlesPanel to top of the Home Page
-        add(titlesPanel);
+        add(getTitlesPanel());
         // Scroll panel with all the groups
-        JScrollPane scrollGroupsPanel = getGroupsPanel();
-        // Add the scrollPanel in the middle of the screen
-        add(scrollGroupsPanel);
+        add(getGroupsPanel());
         // Add the add group button on bottom of the screen
-        JPanel buttonPanel = getButtonPanel();
-        add(buttonPanel);
+        add(getButtonPanel());
     }
 
     private static JPanel getTitlesPanel() {

@@ -153,7 +153,14 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
 
     private void saveTicket() {
         controller.addPropertyChangeListener(this);
-        float totalAmount = Float.parseFloat(totalAmountField.getText());
+        float totalAmount;
+        try {
+            totalAmount = Float.parseFloat(totalAmountField.getText());
+        }
+        catch (Exception e) {
+            totalAmount = 0;
+            System.out.print("No totalAmount added");
+        }
         Person payer = (Person) payerComboBox.getSelectedItem();
         String stringPayBehaviour = (String) payBehaviourComboBox.getSelectedItem();
         String tag = tagField.getText();

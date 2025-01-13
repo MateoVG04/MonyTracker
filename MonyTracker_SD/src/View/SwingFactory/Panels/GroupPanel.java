@@ -2,6 +2,7 @@ package View.SwingFactory.Panels;
 
 import Model.Database.GroupDB;
 import Model.Group;
+import Model.Person;
 import Model.Ticket;
 import Controller.Controller;
 import View.SwingFactory.SwingViewFrame;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GroupPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
@@ -20,6 +22,7 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
     private final Group group;
     private final Controller controller;
     private final int groupID;
+    private final Map<Person, Map<Person,Float>> transactions;
 
     public GroupPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
@@ -27,27 +30,20 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         GroupDB groupDB = GroupDB.getInstance();
         this.groupID = groupID;
         this.group = groupDB.getGroupEntry(groupID).getGroup();
+        this.transactions = group.calculateTransactions();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         // RGB colors: https://teaching.csse.uwa.edu.au/units/CITS1001/colorinfo.html
         setBackground(Color.BLUE);
-        // Title panel
-        JPanel titlePanel = getTitlePanel();
         // add titlePanel to top of the Home Page
-        add(titlePanel);
+        add(getTitlePanel());
         // Panel to show how much you are owed/you owe to whom
-        JPanel moneyTotalPanel = getMoneyTotalPanel();
-        // Add the moneyTotalPanel under the title
-        add(moneyTotalPanel);
+        add(getMoneyTotalPanel());
         // Scroll panel with all the Ticket of this group
-        JScrollPane scrollTicketsPanel = getTicketsPanel();
-        // Add the scrollPanel in the middle of the screen
-        add(scrollTicketsPanel);
-        // AddTicket button and back button
-        JPanel buttonsPanel = getButtonsPanel();
-        // Add the buttons at the bottom of the screen
-        add(buttonsPanel);
+        add(getTicketsPanel());
+        // AddTicket button, back button and remove group button (in RED)
+        add(getButtonsPanel());
     }
 
     private JPanel getTitlePanel() {
@@ -67,6 +63,12 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         JPanel moneyTotalPanel = getNewVerticallyAndCenteredPanel();
         moneyTotalPanel.setBackground(Color.BLUE);
         JLabel moneyTotalLabel;
+        /*
+        for (Person person1 : transactions.keySet()) {
+            for (Person person2 : transactions.get(person1).keySet()) {
+
+            }
+        }*/
         if (moneyTotal >= 0) {
             moneyTotalLabel = new JLabel("You are owed €" + moneyTotal + " from " + personInDebt, SwingConstants.CENTER);
         }
@@ -131,6 +133,8 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
 
     private void removeGroup() {
         controller.addPropertyChangeListener(this);
+        // show a confirm dialog to make sure the user wants to delete this group
+        // in the future we can add an undo button that shows when the user deleted a group
         int option = JOptionPane.showConfirmDialog(viewFrame, "Are you sure you want to delete this group? This can't be undone!", null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (option == JOptionPane.YES_OPTION) {
             controller.removeGroup(group.getGroupID());
