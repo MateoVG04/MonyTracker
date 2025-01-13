@@ -1,6 +1,5 @@
 package Controller;
 
-import Model.Database.Entries.GroupEntry;
 import Model.Group;
 import Model.ModelApp;
 import Model.Person;

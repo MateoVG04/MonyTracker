@@ -14,12 +14,14 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
     private final Controller controller;
     private JTextField groupNameField;
     private final ArrayList<JTextField> personNameFields;
-    private JPanel personNamePanel;
+    private final ArrayList<JTextField> personEmailFields;
+    private JPanel personPanel;
 
     public AddGroupPanel(SwingViewFrame viewFrame, Controller controller) {
         this.viewFrame = viewFrame;
         this.controller = controller;
         personNameFields = new ArrayList<>();
+        personEmailFields = new ArrayList<>();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -30,9 +32,9 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
         // Group name input panel
         add(getGroupNamePanel());
         // Person name input panel
-        personNamePanel = getPersonNamePanel();
+        personPanel = getPersonPanel();
         // Scroll panel so you can scroll between all the members you want to add
-        JScrollPane personNameScroller = new JScrollPane(personNamePanel);
+        JScrollPane personNameScroller = new JScrollPane(personPanel);
         personNameScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(personNameScroller);
         // Buttons panel
@@ -71,17 +73,23 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
     }
 
     // This will add the first PersonName input
-    private JPanel getPersonNamePanel() {
-        personNamePanel = new JPanel();
-        personNamePanel.setLayout(new BoxLayout(personNamePanel, BoxLayout.Y_AXIS));
-        personNamePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        personNamePanel.setBackground(Color.BLUE);
-        addPersonNameField();
-        return personNamePanel;
+    private JPanel getPersonPanel() {
+        personPanel = new JPanel();
+        personPanel.setLayout(new BoxLayout(personPanel, BoxLayout.Y_AXIS));
+        personPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        personPanel.setBackground(Color.BLUE);
+        addPersonField();
+        return personPanel;
     }
 
     // Adds a new input for a personName
-    private void addPersonNameField() {
+    private void addPersonField() {
+        personPanel.add(Box.createVerticalStrut(10));
+        JPanel rowPanel = new JPanel();
+        rowPanel.setLayout(new BoxLayout(rowPanel, BoxLayout.X_AXIS));
+        rowPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        rowPanel.setBackground(Color.BLUE);
+        // Person Name Input
         JLabel personNameLabel = new JLabel("Person Name:");
         personNameLabel.setFont(new Font("Montserrat", Font.BOLD, 20));
         personNameLabel.setForeground(Color.WHITE);
@@ -90,8 +98,20 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
         personNameField.setMaximumSize(new Dimension(200, 30));
         personNameField.setPreferredSize(new Dimension(200, 30));
         personNameFields.add(personNameField);
-        personNamePanel.add(personNameLabel);
-        personNamePanel.add(personNameField);
+        // Person Email Input
+        JLabel personEmailLabel = new JLabel("Email:");
+        personEmailLabel.setFont(new Font("Montserrat", Font.BOLD, 20));
+        personEmailLabel.setForeground(Color.WHITE);
+        personEmailLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JTextField personEmailField = new JTextField(20);
+        personEmailField.setMaximumSize(new Dimension(200, 30));
+        personEmailField.setPreferredSize(new Dimension(200, 30));
+        personEmailFields.add(personEmailField);
+        rowPanel.add(personNameLabel);
+        rowPanel.add(personNameField);
+        rowPanel.add(personEmailLabel);
+        rowPanel.add(personEmailField);
+        personPanel.add(rowPanel);
         revalidate();
         repaint();
     }
@@ -107,7 +127,7 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
         buttonsPanel.add(cancelButton);
         // Add person button will add an extra personName input field
         JButton addPersonButton = new JButton("+ Add Person");
-        addPersonButton.addActionListener(e -> addPersonNameField());
+        addPersonButton.addActionListener(e -> addPersonField());
         buttonsPanel.add(addPersonButton);
         // Save group button will first validate the users, and the save the group to the database
         JButton saveGroupButton = new JButton("Save Group");
