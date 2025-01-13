@@ -18,6 +18,7 @@ public class EmailSender implements PropertyChangeListener{
     private ArrayList<Person> groupMembers;
     private Group group;
     private final String MoneyTrackerEmail = "MonyTrackerSD@gmail.com";
+    // money_tracker1
     private final String MoneyTrackerPassword = "zxdm kuek orql iutn";
     private volatile static EmailSender uniqueInstance;
 
@@ -57,7 +58,7 @@ public class EmailSender implements PropertyChangeListener{
 
             // sessie maken
             Session session = Session.getInstance(props,auth);
-            String TestAddress = "lies.foubert@gmail.com";
+            String TestAddress = "mateo.vangeyt@gmail.com";
 
             try{
                 for (Person person : groupMembers) {
@@ -71,7 +72,7 @@ public class EmailSender implements PropertyChangeListener{
                             "op MoneyTracker.\nMet vriendelijke groeten,\nHet MoneyTracker Team!";
                     message.setText(body);
                     message.saveChanges();
-                    System.out.println("message: "+from.getAddress());
+
                     // verstuur nu de mail
                     Transport.send(message);
                 }

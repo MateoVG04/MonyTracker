@@ -1,8 +1,6 @@
 package Model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Group {
     private final String groupName;
@@ -56,20 +54,82 @@ public class Group {
         this.tickets.add(ticket);
     }
     public Map<Person,Map<Person,Float>> calculateTransactions() {
-        // wordt aangeroepen als de reis gedaan is en je op calculate transactions of group klikt
-        // Er wordt een list gemaakt met in deze list dictionary (key1, value1) met de key1 de username of
-        // userid en als value1 nog een dictionary (key2, value2) met als key2 de username of userid aan wie
-        // de eerste user moet betalen en als value2 het totaal bedrag dat die user aan de 2e user (key2)
-        // moet betalen
-        // Map<wieBetaald,Map<wieOntvangt,bedragTeOntvangen>>
-        for (Ticket ticket : tickets) {
-            Map<Person,Float> innerMap = transactions.get(ticket.getPayer());
-            for (Map.Entry<Person,Float> needsToPay : innerMap.entrySet()) {
-                Map<Person,Float> payToPersonMap = new HashMap<>();
-                payToPersonMap.put(ticket.getPayer(),ticket.getPaymentsOwed().get(needsToPay.getKey())+transactions.get(needsToPay.getKey()).get(ticket.getPayer()));
-                transactions.put(needsToPay.getKey(),payToPersonMap);
+        transactions.clear();
+
+        for (Person person : groupMembers) {
+            transactions.put(person, new HashMap<>());
+            for (Person otherPerson : groupMembers) {
+                if (!person.equals(otherPerson)) {
+                    transactions.get(person).put(otherPerson, 0.0f);
+                }
             }
         }
+
+        for (Ticket ticket : tickets) {
+            Person payer = ticket.getPayer();
+            Map<Person,Float> paymentsOwed = ticket.getPaymentsOwed();
+
+            for (Map.Entry<Person,Float> entry : paymentsOwed.entrySet()) {
+                Person debtor = entry.getKey();
+                Float amountOwed = entry.getValue();
+
+                if (transactions.containsKey(debtor) && transactions.get(debtor).containsKey(payer)) {
+                    float updateAmount = transactions.get(debtor).get(payer) + amountOwed;
+                    transactions.get(debtor).put(payer, updateAmount);
+                }
+            }
+        }
+        System.out.println(transactions);
         return transactions;
     }
+
+    public Map<Person,Map<Person,Float>> finalizeTransactions() {
+        Map<Person, Float> netBalances = new HashMap<>();
+
+        for (Map.Entry<Person, Map<Person, Float>> entry : transactions.entrySet()) {
+            Person person = entry.getKey();
+            netBalances.put(person, 0.0f);
+
+            for (Map.Entry<Person, Float> subEntry : entry.getValue().entrySet()) {
+                Person otherPerson = subEntry.getKey();
+                Float amount = subEntry.getValue();
+                netBalances.put(person, netBalances.get(person) - amount);
+                netBalances.put(otherPerson, netBalances.getOrDefault(otherPerson, 0.0f) + amount);
+            }
+        }
+        PriorityQueue<Map.Entry<Person, Float>> creditors = new PriorityQueue<>((a, b) -> Float.compare(b.getValue(), a.getValue()));
+        PriorityQueue<Map.Entry<Person, Float>> debtors = new PriorityQueue<>((a, b) -> Float.compare(a.getValue(), b.getValue()));
+
+        for (Map.Entry<Person, Float> entry : netBalances.entrySet()) {
+            if (entry.getValue() > 0) {
+                creditors.add(entry);
+            } else if (entry.getValue() < 0) {
+                debtors.add(entry);
+            }
+        }
+        Map<Person, Map<Person, Float>> finalTransactions = new HashMap<>();
+
+        while (!creditors.isEmpty() && !debtors.isEmpty()) {
+            Map.Entry<Person, Float> creditor = creditors.poll();
+            Map.Entry<Person, Float> debtor = debtors.poll();
+            float credit = creditor.getValue();
+            float debt = -debtor.getValue();
+            float settledAmount = Math.min(credit, debt);
+            finalTransactions.putIfAbsent(debtor.getKey(), new HashMap<>());
+            finalTransactions.get(debtor.getKey()).put(creditor.getKey(), settledAmount);
+            credit -= settledAmount;
+            debt -= settledAmount;
+
+            if (credit > 0) {
+                creditors.add(new AbstractMap.SimpleEntry<>(creditor.getKey(), credit));
+            }
+
+            if (debt > 0) {
+                debtors.add(new AbstractMap.SimpleEntry<>(debtor.getKey(), -debt));
+            }
+        }
+        System.out.println("final: "+finalTransactions);
+        return finalTransactions;
+    }
 }
+
