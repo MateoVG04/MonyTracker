@@ -2,7 +2,6 @@ package Model.Database;
 
 import Model.Database.Entries.GroupEntry;
 import Model.Database.Entries.GroupEntryNull;
-import Model.Database.Entries.GroupEntry;
 import Model.Observers.EmailSender;
 
 import java.beans.PropertyChangeListener;
@@ -31,6 +30,7 @@ public class GroupDB {
         }
         return uniqueInstance;
     }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         this.support.addPropertyChangeListener(listener);
     }
@@ -38,6 +38,7 @@ public class GroupDB {
     public void removePropertyChangeListener(PropertyChangeListener listener){
         support.removePropertyChangeListener(listener);
     }
+
     public void addGroupEntry(GroupEntry groupEntry) {
         int groupID = groupEntry.getGroup().getGroupID();
         if (!db.containsKey(groupID)) {

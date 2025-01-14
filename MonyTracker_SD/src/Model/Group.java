@@ -53,6 +53,7 @@ public class Group {
     public void addTicket(Ticket ticket) {
         this.tickets.add(ticket);
     }
+
     public Map<Person,Map<Person,Float>> calculateTransactions() {
         transactions.clear();
 

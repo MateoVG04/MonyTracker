@@ -16,13 +16,10 @@ import java.util.Map;
 
 public class GroupPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
-    private float moneyTotal;
-    private float personInDebt;
-    private float personYouOwe;
+    private final Map<Person, Map<Person, Float>> transactions;
     private final Group group;
     private final Controller controller;
     private final int groupID;
-    //private final Map<Person, Map<Person,Float>> transactions;
 
     public GroupPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
@@ -30,7 +27,9 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         GroupDB groupDB = GroupDB.getInstance();
         this.groupID = groupID;
         this.group = groupDB.getGroupEntry(groupID).getGroup();
-        //this.transactions = group.calculateTransactions();
+        // groupPanel gets recreated every time we add a ticket, so
+        // it will calculate how much everyone owes every time a ticket gets created
+        this.transactions = group.calculateTransactions();
         // We use this BoxLayout, so all the SubPanels will come under each other
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -59,27 +58,24 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         return titlePanel;
     }
 
-    private JPanel getMoneyTotalPanel() {
+    private JScrollPane getMoneyTotalPanel() {
         JPanel moneyTotalPanel = getNewVerticallyAndCenteredPanel();
         moneyTotalPanel.setBackground(Color.BLUE);
         JLabel moneyTotalLabel;
-        /*
+        StringBuilder moneyTotal = new StringBuilder();
         for (Person person1 : transactions.keySet()) {
             for (Person person2 : transactions.get(person1).keySet()) {
-
+                moneyTotal.append(person1).append(" owes ").append(person2).append(" €").append(transactions.get(person1).get(person2).toString()).append("\n");
             }
-        }*/
-        if (moneyTotal >= 0) {
-            moneyTotalLabel = new JLabel("You are owed €" + moneyTotal + " from " + personInDebt, SwingConstants.CENTER);
         }
-        else {
-            moneyTotalLabel = new JLabel("You owe " + personYouOwe + " €" + moneyTotal, SwingConstants.CENTER);
-        }
+        moneyTotalLabel = new JLabel(moneyTotal.toString());
         moneyTotalLabel.setFont(new Font("Montserrat", Font.BOLD, 18));
         moneyTotalLabel.setForeground(Color.white);
         moneyTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         moneyTotalPanel.add(moneyTotalLabel);
-        return moneyTotalPanel;
+        JScrollPane scrollMoneyTotalPanel = new JScrollPane(moneyTotalPanel);
+        scrollMoneyTotalPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        return scrollMoneyTotalPanel;
     }
 
     private JScrollPane getTicketsPanel() {
@@ -108,21 +104,21 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         JPanel buttonPanel = getNewVerticallyAndCenteredPanel();
         buttonPanel.setBackground(Color.BLUE);
         JButton addTicketButton = new JButton("Add Ticket");
-        addTicketButton.setPreferredSize(new Dimension(160, 80));
+        addTicketButton.setPreferredSize(new Dimension(200, 30));
         addTicketButton.setMaximumSize(addTicketButton.getPreferredSize());
         addTicketButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         // When button clicked go to addTicket dialogue
         addTicketButton.addActionListener(e -> this.viewFrame.updateAndShowAddTicketPage(groupID));
         buttonPanel.add(addTicketButton, BorderLayout.LINE_END);
         JButton backButton = new JButton("Back");
-        backButton.setPreferredSize(new Dimension(160, 80));
+        backButton.setPreferredSize(new Dimension(200, 30));
         backButton.setMaximumSize(backButton.getPreferredSize());
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         // when back button is clicked we go back to home page
         backButton.addActionListener(e -> this.viewFrame.updateAndShowHomePage());
         buttonPanel.add(backButton, BorderLayout.CENTER);
         JButton removeGroupButton = new JButton("Remove Group");
-        removeGroupButton.setPreferredSize(new Dimension(160, 80));
+        removeGroupButton.setPreferredSize(new Dimension(200, 30));
         removeGroupButton.setMaximumSize(removeGroupButton.getPreferredSize());
         removeGroupButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         removeGroupButton.setBackground(Color.RED);

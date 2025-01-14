@@ -20,7 +20,6 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     private JTextField totalAmountField;
     private JComboBox<String> payBehaviourComboBox;
     private JPanel personInputsPanel;
-    private JScrollPane personInputsScrollPanel;
     private final Map<Person, Float> personAmounts = new HashMap<>();
     private JTextField tagField;
     private JTextField descriptionField;
@@ -115,7 +114,7 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
         personInputsPanel = new JPanel();
         personInputsPanel.setLayout(new BoxLayout(personInputsPanel, BoxLayout.Y_AXIS));
         personInputsPanel.setBackground(Color.BLUE);
-        personInputsScrollPanel = new JScrollPane(personInputsPanel);
+        JScrollPane personInputsScrollPanel = new JScrollPane(personInputsPanel);
         personInputsScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         return personInputsScrollPanel;
     }
@@ -138,7 +137,7 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
                 personPanel.add(personLabel);
                 personPanel.add(amountField);
                 personInputsPanel.add(personPanel);
-                Float personAmount = 0f;
+                float personAmount = 0f;
                 if (!amountField.getText().isEmpty()) {
                     personAmount = Float.parseFloat(amountField.getText());
                 }

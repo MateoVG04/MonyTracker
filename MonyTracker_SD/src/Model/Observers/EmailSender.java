@@ -1,13 +1,10 @@
 package Model.Observers;
 
-import Model.Database.GroupDB;
 import Model.Group;
 import Model.Person;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.mail.*;
