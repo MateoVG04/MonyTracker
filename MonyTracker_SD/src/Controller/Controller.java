@@ -33,27 +33,28 @@ public class Controller implements PropertyChangeListener {
         support.removePropertyChangeListener(listener);
     }
 
-    public void addGroup(String groupName, ArrayList<String> personNames) {
+    public void addGroup(String groupName, ArrayList<Person> persons) {
         // if no groupName was provided, show error message and return to old state
         if (groupName.isEmpty()) {
             support.firePropertyChange("error", null, "Group name cannot be empty.");
             return;
         }
         // at least one personName should be provided otherwise -> error and return to old state
-        ArrayList<String> validPersonNames = new ArrayList<>();
-        for (String personName : personNames) {
+        ArrayList<Person> validPersons = new ArrayList<>();
+        for (Person person : persons) {
+            String personName = person.getName();
             if (!personName.isEmpty()) {
-                validPersonNames.add(personName);
+                validPersons.add(person);
             }
         }
-        if (validPersonNames.isEmpty()) {
+        if (validPersons.isEmpty()) {
             support.firePropertyChange("error", null, "At least one person name must be provided.");
             return;
         }
         // Only if there was a valid groupName and at least one valid person we add the group to the model groupDB.
         Group group = new Group(groupName);
-        for(String personName : validPersonNames) {
-            group.addPersonToGroup(new Person(personName, ""));
+        for(Person person : validPersons) {
+            group.addPersonToGroup(person);
         }
         model.addGroup(group);
     }

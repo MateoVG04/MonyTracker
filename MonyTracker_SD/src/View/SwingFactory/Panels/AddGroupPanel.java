@@ -1,6 +1,7 @@
 package View.SwingFactory.Panels;
 
 import Controller.Controller;
+import Model.Person;
 import View.SwingFactory.SwingViewFrame;
 
 import javax.swing.*;
@@ -140,12 +141,13 @@ public class AddGroupPanel extends JPanel implements PropertyChangeListener {
         // The view observes the controller
         controller.addPropertyChangeListener(this);
         String groupName = groupNameField.getText();
-        ArrayList<String> personNames = new ArrayList<>();
-        for (JTextField personNameField : personNameFields) {
-            String personName = personNameField.getText();
-            personNames.add(personName);
+        ArrayList<Person> persons = new ArrayList<>();
+        for (int i = 0; i < personNameFields.size(); i++) {
+            String personName = personNameFields.get(i).getText();
+            String personEmail = personEmailFields.get(i).getText();
+            persons.add(new Person(personName, personEmail));
         }
-        controller.addGroup(groupName, personNames);
+        controller.addGroup(groupName, persons);
         controller.removePropertyChangeListener(this);
     }
 
