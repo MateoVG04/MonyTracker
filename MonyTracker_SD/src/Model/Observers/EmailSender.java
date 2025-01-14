@@ -58,15 +58,13 @@ public class EmailSender implements PropertyChangeListener{
 
             // sessie maken
             Session session = Session.getInstance(props,auth);
-            String TestAddress = "mateo.vangeyt@gmail.com";
-
+            
             try{
                 for (Person person : groupMembers) {
                     Message message = new MimeMessage(session);
                     InternetAddress from = new InternetAddress(MoneyTrackerEmail);
                     message.setFrom(from);
-                    // set de ontvanger email tijdelijk een test adres, maar later moet dit .parse(person.getEmail) zijn
-                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TestAddress));
+                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(person.getEmail()));
                     message.setSubject(subject);
                     String body = "Hallo "+person.getName()+",\nU bent toegevoegd aan de groep: "+this.group.getGroupName()+" " +
                             "op MoneyTracker.\nMet vriendelijke groeten,\nHet MoneyTracker Team!";
