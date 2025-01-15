@@ -61,7 +61,6 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
     private JScrollPane getMoneyTotalPanel() {
         JPanel moneyTotalPanel = getNewVerticallyAndCenteredPanel();
         moneyTotalPanel.setBackground(Color.BLUE);
-        JLabel moneyTotalLabel;
         StringBuilder moneyTotal = new StringBuilder();
         for (Person person1 : transactions.keySet()) {
             for (Person person2 : transactions.get(person1).keySet()) {
@@ -71,9 +70,14 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
                 }
             }
         }
-        moneyTotalLabel = new JLabel(moneyTotal.toString());
+        // J text area, so \n works with it
+        JTextArea moneyTotalLabel;
+        moneyTotalLabel = new JTextArea(moneyTotal.toString());
+        moneyTotalLabel.setEditable(false); // Make it read-only
+        // Very Light Blue
+        moneyTotalLabel.setBackground(new Color(51, 204, 255));
+        moneyTotalLabel.setForeground(Color.WHITE);
         moneyTotalLabel.setFont(new Font("Montserrat", Font.BOLD, 18));
-        moneyTotalLabel.setForeground(Color.white);
         moneyTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         moneyTotalPanel.add(moneyTotalLabel);
         JScrollPane scrollMoneyTotalPanel = new JScrollPane(moneyTotalPanel);
