@@ -47,6 +47,9 @@ public class Group {
     public void addPersonToGroup(Person person) {
         this.groupMembers.add(person);
     }
+    public void removePersonFromGroup(Person person) {
+        this.groupMembers.remove(person);
+    }
     public ArrayList<Person> getGroupMembers() {
         return groupMembers;
     }

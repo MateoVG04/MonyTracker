@@ -65,7 +65,10 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         StringBuilder moneyTotal = new StringBuilder();
         for (Person person1 : transactions.keySet()) {
             for (Person person2 : transactions.get(person1).keySet()) {
-                moneyTotal.append(person1).append(" owes ").append(person2).append(" €").append(transactions.get(person1).get(person2).toString()).append("\n");
+                float moneyOwed = transactions.get(person1).get(person2);
+                if (moneyOwed != 0) {
+                    moneyTotal.append(person1).append(" owes ").append(person2).append(" €").append(moneyOwed).append("\n");
+                }
             }
         }
         moneyTotalLabel = new JLabel(moneyTotal.toString());
@@ -124,6 +127,13 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         removeGroupButton.setBackground(Color.RED);
         removeGroupButton.addActionListener(e -> removeGroup());
         buttonPanel.add(removeGroupButton, BorderLayout.LINE_START);
+        JButton removePersonButton = new JButton("Remove Person");
+        removePersonButton.setPreferredSize(new Dimension(200, 30));
+        removePersonButton.setMaximumSize(removePersonButton.getPreferredSize());
+        removePersonButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removePersonButton.setBackground(Color.RED);
+        removePersonButton.addActionListener(e -> removePerson());
+        buttonPanel.add(removePersonButton, BorderLayout.LINE_END);
         return buttonPanel;
     }
 
@@ -139,6 +149,25 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         // If the user clicks no, we will do nothing and the group is not removed
     }
 
+    private void removePerson() {
+        controller.addPropertyChangeListener(this);
+        // First we are going to show a JComboBox with all the persons of this group
+        // Here you can choose a person which you want to remove
+        JComboBox<Person> personComboBox = new JComboBox<>(group.getGroupMembers().toArray(new Person[0]));
+        int option = JOptionPane.showConfirmDialog(viewFrame, personComboBox, "Select a person to remove", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            Person selectedPerson = (Person) personComboBox.getSelectedItem();
+            if (selectedPerson != null) {
+                // Just like the removeGroup dialog confirm if you really want to remove this person
+                int confirmOption = JOptionPane.showConfirmDialog(viewFrame, "Are you sure you want to delete " + selectedPerson.getName() + " from this group?", null, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (confirmOption == JOptionPane.YES_OPTION) {
+                    controller.removePersonFromGroup(groupID, selectedPerson);
+                }
+            }
+        }
+        controller.removePropertyChangeListener(this);
+    }
+
     private static JPanel getNewVerticallyAndCenteredPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -151,6 +180,9 @@ public class GroupPanel extends JPanel implements PropertyChangeListener {
         if (evt.getPropertyName().equals("removedGroup")) {
             JOptionPane.showMessageDialog(viewFrame, "Group with ID " + evt.getNewValue() + " was removed successfully");
             viewFrame.updateAndShowHomePage();
+        }
+        else if (evt.getPropertyName().equals("removedPerson")) {
+            JOptionPane.showMessageDialog(viewFrame, "Person: " + evt.getNewValue() + " was removed successfully");
         }
     }
 }

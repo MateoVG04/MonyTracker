@@ -28,6 +28,12 @@ public class ModelApp {
         support.firePropertyChange("removedGroup", null, groupID);
     }
 
+    public void removePersonFromGroup(int groupID, Person person) {
+        Group group = GroupDB.getInstance().getGroupEntry(groupID).getGroup();
+        group.removePersonFromGroup(person);
+        support.firePropertyChange("removedPerson", null, person);
+    }
+
     public void addTicketToGroup(Ticket ticket, Group group) {
          group.addTicket(ticket);
          support.firePropertyChange("addedTicket", null, ticket);

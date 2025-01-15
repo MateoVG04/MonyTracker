@@ -63,6 +63,10 @@ public class Controller implements PropertyChangeListener {
         model.removeGroup(groupID);
     }
 
+    public void removePersonFromGroup(int groupID, Person person) {
+        model.removePersonFromGroup(groupID, person);
+    }
+
     public void addTicketToGroup(Group group, float totalAmount, Person payer, String stringPayBehaviour, String tag, String description, Map<Person, Float> personAmounts) {
         // Check if totalAmount is valid
         if (totalAmount <= 0) {
@@ -120,6 +124,10 @@ public class Controller implements PropertyChangeListener {
         else if ("removedGroup".equals(evt.getPropertyName())) {
             int removedGroupID = (int) evt.getNewValue();
             support.firePropertyChange("removedGroup", null, removedGroupID);
+        }
+        else if ("removedPerson".equals(evt.getPropertyName())) {
+            Person removedPerson = (Person) evt.getNewValue();
+            support.firePropertyChange("removedPerson", null, removedPerson);
         }
         else if ("addedTicket".equals(evt.getPropertyName())) {
             Ticket newTicket = (Ticket) evt.getNewValue();

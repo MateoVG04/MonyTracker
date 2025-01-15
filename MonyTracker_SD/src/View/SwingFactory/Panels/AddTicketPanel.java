@@ -20,7 +20,8 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     private JTextField totalAmountField;
     private JComboBox<String> payBehaviourComboBox;
     private JPanel personInputsPanel;
-    private final Map<Person, Float> personAmounts = new HashMap<>();
+    private final Map<Person, Float> personAmounts;
+    private final Map<Person, JTextField> personAmountFields;
     private JTextField tagField;
     private JTextField descriptionField;
     private final int groupID;
@@ -29,6 +30,8 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     public AddTicketPanel(SwingViewFrame viewFrame, Controller controller, int groupID) {
         this.viewFrame = viewFrame;
         this.controller = controller;
+        this.personAmounts = new HashMap<>();
+        this.personAmountFields = new HashMap<>();
         this.groupID = groupID;
         this.group = GroupDB.getInstance().getGroupEntry(groupID).getGroup();
         // We use this BoxLayout, so all the SubPanels will come under each other
@@ -136,12 +139,9 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
                 amountField.setMaximumSize(new Dimension(200, 30));
                 personPanel.add(personLabel);
                 personPanel.add(amountField);
+                System.out.println("amountField in addPerson input" + person +": " + amountField.getText());
+                personAmountFields.put(person, amountField);
                 personInputsPanel.add(personPanel);
-                float personAmount = 0f;
-                if (!amountField.getText().isEmpty()) {
-                    personAmount = Float.parseFloat(amountField.getText());
-                }
-                personAmounts.put(person, personAmount);
             }
         }
         personInputsPanel.revalidate();
@@ -202,6 +202,13 @@ public class AddTicketPanel extends JPanel implements PropertyChangeListener {
         }
         catch (Exception e) {
             System.out.print("No totalAmount added");
+        }
+        for (Person person : personAmountFields.keySet()) {
+            JTextField amountField = personAmountFields.get(person);
+            if (!amountField.getText().isEmpty()) {
+                float personAmount = Float.parseFloat(amountField.getText());
+                personAmounts.put(person, personAmount);
+            }
         }
         Person payer = (Person) payerComboBox.getSelectedItem();
         String stringPayBehaviour = (String) payBehaviourComboBox.getSelectedItem();

@@ -61,7 +61,6 @@ public class SwingViewFrame extends JFrame {
         // add the new ticketPanel and show it
         cardPanel.add(ticketPanel, "TICKET");
         cardLayout.show(cardPanel, "TICKET");
-
     }
 
     public void updateAndShowAddGroupPage() {
