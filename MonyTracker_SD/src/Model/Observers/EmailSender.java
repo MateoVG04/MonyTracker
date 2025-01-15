@@ -15,7 +15,6 @@ public class EmailSender implements PropertyChangeListener{
     private ArrayList<Person> groupMembers;
     private Group group;
     private final String MoneyTrackerEmail = "MonyTrackerSD@gmail.com";
-    // money_tracker1
     private final String MoneyTrackerPassword = "zxdm kuek orql iutn";
     private volatile static EmailSender uniqueInstance;
 
@@ -72,7 +71,10 @@ public class EmailSender implements PropertyChangeListener{
                     Transport.send(message);
                 }
 
-            } catch (MessagingException e){
+            }
+            // Just prints an error right now
+            // In the future we will create a warning in the view
+            catch (MessagingException e){
                 e.printStackTrace();
             }
         }

@@ -14,6 +14,9 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+// This panel will show when you click a particular group
+// There are some long functions which is not ideal, but it is functional
+// We have solutions for this, but we had no time to add these
 public class GroupPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
     private final Map<Person, Map<Person, Float>> transactions;

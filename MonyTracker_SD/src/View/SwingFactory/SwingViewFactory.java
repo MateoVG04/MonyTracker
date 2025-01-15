@@ -7,8 +7,8 @@ import View.SwingFactory.Panels.*;
 
 import javax.swing.*;
 
+// We implement the abstractFactory with JPanel as type
 public class SwingViewFactory implements AbstractViewFactory<JPanel> {
-    // We implement the abstractFactory with JPanel as type
     private final SwingViewFrame viewFrame;
     private final Controller controller;
 

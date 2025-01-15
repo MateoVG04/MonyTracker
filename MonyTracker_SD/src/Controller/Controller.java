@@ -15,6 +15,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Map;
 
+// Controller is used to validate the data it gets from view
+// And then send it over to the model, it listens to the model
+// And fire a property change when the model is done so the view can update its contents
 public class Controller implements PropertyChangeListener {
     private final ModelApp model;
     private final PropertyChangeSupport support;
