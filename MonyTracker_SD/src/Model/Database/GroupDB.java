@@ -9,6 +9,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 import java.util.HashMap;
 
+// Database where all the groups are stored
 public class GroupDB {
     private final HashMap<Integer, GroupEntry> db;
     private volatile static GroupDB uniqueInstance;
@@ -21,8 +22,13 @@ public class GroupDB {
     }
 
     public static GroupDB getInstance() {
+        // First check if there already is an instance
+        // If there is we can just return this instance without waiting
         if (uniqueInstance == null) {
+            // If there isn't we can only let one thread go into this part -> synchronized
             synchronized (GroupDB.class) {
+                // Check another time if the uniqueInstance is null, so the second thread who was waiting
+                // for the first thread doesn't also create an instance
                 if (uniqueInstance == null) {
                     uniqueInstance = new GroupDB();
                 }

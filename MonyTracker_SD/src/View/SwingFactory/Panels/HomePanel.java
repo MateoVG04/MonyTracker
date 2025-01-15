@@ -8,6 +8,7 @@ import View.SwingFactory.SwingViewFrame;
 import javax.swing.*;
 import java.awt.*;
 
+// This panel will show when you start the app or go back from the group page
 public class HomePanel extends JPanel {
     private final SwingViewFrame viewFrame;
     private final GroupDB groupDB;

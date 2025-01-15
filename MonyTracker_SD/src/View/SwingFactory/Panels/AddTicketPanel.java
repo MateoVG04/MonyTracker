@@ -13,6 +13,9 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+// This panel will show when you click add ticket in a group
+// There are some long functions which is not ideal, but it is functional
+// We have solutions for this, but we had no time to add these
 public class AddTicketPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
     private final Controller controller;

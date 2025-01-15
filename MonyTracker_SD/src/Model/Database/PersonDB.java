@@ -5,6 +5,8 @@ import Model.Database.Entries.PersonEntryNull;
 
 import java.util.HashMap;
 
+
+
 // For all the accounts, right now were not using this
 // We could use this to verify if a user has an account and only then add it to the group
 public class PersonDB {
