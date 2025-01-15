@@ -24,17 +24,6 @@ public class Group {
         this.transactions = new HashMap<>();
     }
 
-    /* Dit was in constructor maar snap niet wat dit doet.
-    for (Person person1 : groupMembers) {
-            Map<Person,Float> owedList = new HashMap<>();
-            for (Person person2 : groupMembers) {
-                if (person1 != person2) {
-                    owedList.put(person2,0.0f);
-                }
-            }
-            transactions.put(person1,owedList);
-        }*/
-
     public String getGroupName() {
         return groupName;
     }
@@ -87,6 +76,13 @@ public class Group {
         return transactions;
     }
 
+    // This method would be to calculate the transactions with the minimal amount of transactions
+    // For example: A owes B, 100 euros
+    //              B owes A, 50 euros
+    //       total: A owes B, 50 euros
+    // In calculateTransactions method
+    //       total: A owes B, 100 euros
+    //              B owes A, 50 euros
     public Map<Person,Map<Person,Float>> finalizeTransactions() {
         Map<Person, Float> netBalances = new HashMap<>();
 

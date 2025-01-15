@@ -10,6 +10,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 
+// This panel will show when you click add Group
+// There are some long functions which is not ideal, but it is functional
+// We have solutions for this, but we had no time to add these
 public class AddGroupPanel extends JPanel implements PropertyChangeListener {
     private final SwingViewFrame viewFrame;
     private final Controller controller;
