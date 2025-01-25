@@ -20,6 +20,8 @@ public class Ticket {
         this.payer = payer;
         this.group = group;
         this.payBehaviour = payBehaviour;
+        // Tag is not really functional yet, we want to add tags where you can choose between a set tags (e.g.: food, drinks, airplane, taxi, ...)
+        // This way we can make a nice overview of what they spend on, can also categories the tags in bigger categories like: transport (taxi + airplane tickets)
         this.tag = tag;
         this.description = description;
         // When this ticket is created, we will calculate immediately who has to pay what
