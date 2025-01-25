@@ -83,6 +83,7 @@ public class Group {
     // In calculateTransactions method
     //       total: A owes B, 100 euros
     //              B owes A, 50 euros
+    // But not working yet...
     public Map<Person,Map<Person,Float>> finalizeTransactions() {
         Map<Person, Float> netBalances = new HashMap<>();
 
